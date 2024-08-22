@@ -1,0 +1,182 @@
+[
+    {
+        "nome": "Conferência de Desenvolvimento de Software 2024",
+        "descricao": "Uma conferência para discutir as últimas tendências e inovações em desenvolvimento de software.",
+        "dataInicio": "2024-09-10T09:00:00",
+        "dataFim": "2024-09-12T17:00:00",
+        "quantidadeHoras": 24,
+        "quantidadeVagas": 300,
+        "categoria": "Conferência"
+    },
+    {
+        "nome": "Workshop de Segurança Cibernética",
+        "descricao": "Workshop focado em técnicas avançadas de segurança cibernética e proteção de dados.",
+        "dataInicio": "2024-10-05T10:00:00",
+        "dataFim": "2024-10-05T16:00:00",
+        "quantidadeHoras": 6,
+        "quantidadeVagas": 50,
+        "categoria": "Workshop"
+    },
+    {
+        "nome": "Curso Intensivo de Machine Learning",
+        "descricao": "Curso intensivo para aprender e aplicar técnicas de machine learning em projetos reais.",
+        "dataInicio": "2024-11-01T08:00:00",
+        "dataFim": "2024-11-30T17:00:00",
+        "quantidadeHoras": 80,
+        "quantidadeVagas": 20,
+        "categoria": "Curso"
+    },
+    {
+        "nome": "Hackathon de Inovação Tecnológica",
+        "descricao": "Um evento colaborativo para desenvolver soluções tecnológicas inovadoras em um formato de competição.",
+        "dataInicio": "2024-12-01T09:00:00",
+        "dataFim": "2024-12-03T18:00:00",
+        "quantidadeHoras": 24,
+        "quantidadeVagas": 100,
+        "categoria": "Hackathon"
+    },
+    {
+        "nome": "Seminário sobre Cloud Computing",
+        "descricao": "Seminário abordando as melhores práticas e tendências em computação em nuvem.",
+        "dataInicio": "2024-09-20T10:00:00",
+        "dataFim": "2024-09-20T15:00:00",
+        "quantidadeHoras": 5,
+        "quantidadeVagas": 150,
+        "categoria": "Seminário"
+    },
+    {
+        "nome": "Maratona de Programação Python",
+        "descricao": "Um evento onde os participantes competem para resolver problemas complexos usando Python.",
+        "dataInicio": "2024-09-15T09:00:00",
+        "dataFim": "2024-09-15T18:00:00",
+        "quantidadeHoras": 9,
+        "quantidadeVagas": 100,
+        "categoria": "Competição"
+    },
+    {
+        "nome": "Curso Avançado de JavaScript",
+        "descricao": "Curso intensivo para desenvolvedores que desejam aprofundar seus conhecimentos em JavaScript.",
+        "dataInicio": "2024-10-01T08:00:00",
+        "dataFim": "2024-10-31T17:00:00",
+        "quantidadeHoras": 40,
+        "quantidadeVagas": 25,
+        "categoria": "Curso"
+    },
+    {
+        "nome": "Workshop de Desenvolvimento Web",
+        "descricao": "Workshop prático sobre desenvolvimento web moderno, abordando HTML, CSS e frameworks JavaScript.",
+        "dataInicio": "2024-11-05T09:00:00",
+        "dataFim": "2024-11-05T17:00:00",
+        "quantidadeHoras": 8,
+        "quantidadeVagas": 30,
+        "categoria": "Workshop"
+    },
+    {
+        "nome": "Seminário sobre Desenvolvimento de Apps Móveis",
+        "descricao": "Seminário focado nas melhores práticas e tendências no desenvolvimento de aplicativos móveis para iOS e Android.",
+        "dataInicio": "2024-12-10T10:00:00",
+        "dataFim": "2024-12-10T16:00:00",
+        "quantidadeHoras": 6,
+        "quantidadeVagas": 100,
+        "categoria": "Seminário"
+    },
+    {
+        "nome": "Hackathon de Desenvolvimento de Software",
+        "descricao": "Hackathon onde equipes trabalham para criar novos softwares e soluções em um tempo limitado.",
+        "dataInicio": "2024-11-20T09:00:00",
+        "dataFim": "2024-11-22T18:00:00",
+        "quantidadeHoras": 48,
+        "quantidadeVagas": 80,
+        "categoria": "Hackathon"
+    },
+    {
+        "nome": "Simposio Internacional de Ciência da Computação",
+        "descricao": "Um simpósio que reúne acadêmicos e pesquisadores para discutir avanços recentes em ciência da computação.",
+        "dataInicio": "2024-09-20T09:00:00",
+        "dataFim": "2024-09-22T17:00:00",
+        "quantidadeHoras": 24,
+        "quantidadeVagas": 150,
+        "categoria": "Simpósio"
+    },
+    {
+        "nome": "Curso de Introdução à Pesquisa em Inteligência Artificial",
+        "descricao": "Curso acadêmico que explora metodologias de pesquisa e aplicação de técnicas de inteligência artificial.",
+        "dataInicio": "2024-10-10T08:00:00",
+        "dataFim": "2024-11-15T17:00:00",
+        "quantidadeHoras": 60,
+        "quantidadeVagas": 30,
+        "categoria": "Curso"
+    },
+    {
+        "nome": "Conferência sobre Algoritmos e Estruturas de Dados",
+        "descricao": "Conferência dedicada a discussões e apresentações sobre novos algoritmos e estruturas de dados.",
+        "dataInicio": "2024-11-05T09:00:00",
+        "dataFim": "2024-11-07T16:00:00",
+        "quantidadeHoras": 18,
+        "quantidadeVagas": 120,
+        "categoria": "Conferência"
+    },
+    {
+        "nome": "Workshop de Metodologias Ágeis em Projetos de Pesquisa",
+        "descricao": "Workshop focado na aplicação de metodologias ágeis para gerenciamento de projetos de pesquisa em TI.",
+        "dataInicio": "2024-12-01T10:00:00",
+        "dataFim": "2024-12-01T16:00:00",
+        "quantidadeHoras": 6,
+        "quantidadeVagas": 40,
+        "categoria": "Workshop"
+    },
+    {
+        "nome": "Seminário de Inovações em Computação Teórica",
+        "descricao": "Seminário acadêmico explorando novas teorias e modelos na área de computação teórica.",
+        "dataInicio": "2024-10-25T09:00:00",
+        "dataFim": "2024-10-25T17:00:00",
+        "quantidadeHoras": 8,
+        "quantidadeVagas": 80,
+        "categoria": "Seminário"
+    },
+    {
+        "nome": "Jornada de Estudos em Segurança da Informação",
+        "descricao": "Uma série de palestras e discussões sobre as últimas pesquisas e práticas em segurança da informação.",
+        "dataInicio": "2024-11-15T09:00:00",
+        "dataFim": "2024-11-17T17:00:00",
+        "quantidadeHoras": 24,
+        "quantidadeVagas": 60,
+        "categoria": "Jornada de Estudos"
+    },
+    {
+        "nome": "Congresso de Engenharia de Software",
+        "descricao": "Congresso dedicado à discussão de práticas, ferramentas e técnicas de engenharia de software.",
+        "dataInicio": "2024-12-10T09:00:00",
+        "dataFim": "2024-12-12T18:00:00",
+        "quantidadeHoras": 24,
+        "quantidadeVagas": 200,
+        "categoria": "Congresso"
+    },
+    {
+        "nome": "Semana de Defesa de TCCs - Tecnologia da Informação",
+        "descricao": "Semana dedicada às defesas de Trabalhos de Conclusão de Curso dos alunos de Tecnologia da Informação.",
+        "dataInicio": "2024-12-01T09:00:00",
+        "dataFim": "2024-12-05T17:00:00",
+        "quantidadeHoras": 40,
+        "quantidadeVagas": 70,
+        "categoria": "Semana de Defesa"
+    },
+    {
+        "nome": "Palestra: Como Elaborar um TCC de Sucesso",
+        "descricao": "Palestra com dicas e orientações sobre como desenvolver um Trabalho de Conclusão de Curso de alta qualidade.",
+        "dataInicio": "2024-10-20T14:00:00",
+        "dataFim": "2024-10-20T16:00:00",
+        "quantidadeHoras": 2,
+        "quantidadeVagas": 80,
+        "categoria": "Palestra"
+    },
+    {
+        "nome": "Mesa Redonda sobre Tendências em TCCs de TI",
+        "descricao": "Mesa redonda discutindo as tendências e desafios atuais na elaboração de Trabalhos de Conclusão de Curso na área de TI.",
+        "dataInicio": "2024-11-15T10:00:00",
+        "dataFim": "2024-11-15T12:00:00",
+        "quantidadeHoras": 2,
+        "quantidadeVagas": 50,
+        "categoria": "Mesa Redonda"
+    }
+]

@@ -1,0 +1,77 @@
+doctype html
+head
+  meta(charset='UTF-8')
+  meta(name='viewport' content='width=device-width, initial-scale=1.0')
+  title Certificados Dispon&iacute;veis
+  style.
+    body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+    }
+    .email-container {
+    max-width: 600px;
+    margin: 0 auto;
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    .header {
+    text-align: center;
+    padding: 20px;
+    }
+    .header img {
+    max-width: 150px;
+    }
+    .content {
+    padding: 20px;
+    }
+    .content h1 {
+    color: #333333;
+    }
+    .content p {
+    color: #666666;
+    line-height: 1.5;
+    }
+    .button-container {
+    text-align: center;
+    margin-top: 20px;
+    }
+    .button {
+    display: inline-block;
+    padding: 10px 20px;
+    color: #ffffff;
+    background-color: #28a745;
+    text-decoration: none;
+    border-radius: 5px;
+    }
+    .footer {
+    text-align: center;
+    padding: 20px;
+    font-size: 12px;
+    color: #999999;
+    }
+.email-container
+  .header
+    img(src='https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg' alt='Logo da Amazon')
+  .content
+    h1 Certificado Disponivel
+    p Ol&aacute; {{nome}},
+    p
+      | &Eacute; com prazer que informamos que o seu certificado de participa&ccedil;&atilde;o no evento {{tema}}, est&aacute; dispon&iacute;vel para download!
+    br
+    .button-container
+      a.button(href='{{download_link}}') Baixar Certificado
+    br
+    p
+      | Parab&eacute;ns novamente por participar do  evento. Esperamos que tenha sido uma experi&ecirc;ncia enriquecedora para voc&ecirc;.
+    pa
+      | Atenciosamente,
+      br
+      | Acadflow- Sistemas de eventos
+    br
+  .footer
+    p Este &eacute; um e-mail autom&aacute;tico, por favor, n&atilde;o responda.
+    p &copy; 2024 Acadflow. Todos os direitos reservados.
