@@ -56,9 +56,22 @@ export class CategoriaService {
     }
 
     async getDescricao () {
-            
             return await this.prisma.categoria.findMany({ })
     }
+
+
+    async getCategoriaComContagemDeEventos() {
+        return this.prisma.categoria.findMany({
+          select: {
+            id: true,
+            descricao: true,
+            _count: {
+              select: { Evento: true },
+            },
+          },
+        });
+      }
+    
 
 
     async update(id: number, descricao: string) {

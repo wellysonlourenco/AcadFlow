@@ -19,6 +19,11 @@ export class CategoriaController {
 
   }
 
+  @Get('contagem-eventos')
+  async getCategoriaComContagemDeEventos() {
+    return this.categoriaService.getCategoriaComContagemDeEventos();
+  }
+
   @Get(':id')
   @HttpCode(200) 
   async getCategoriaById(
@@ -26,6 +31,7 @@ export class CategoriaController {
   ) {
     return this.categoriaService.getById(id);
   }
+
 
 
   // @Get()
