@@ -4,12 +4,12 @@ export const getHTML = ({
     dtStart,
     qtdHours,
     dtEnd,
-  inscricao,
+    qrCode,
     createdAt,
     key,
     url,
   }) => `
-  <html lang="pt-br">
+<html lang="pt-br">
   <head>
     <meta charset="UTF-8" />
     <title>Certificado</title>
@@ -42,6 +42,19 @@ export const getHTML = ({
         font-size: 18px;
       }
 
+      .qr-code {
+        display: flex;
+        justify-content: flex-end;
+        margin-top: 20px;
+      }
+
+      .qr-code img {
+        width: 100px;
+        height: 100px;
+        border: 2px solid #313131;
+        border-radius: 10px;
+      }
+
       footer {
         position: fixed;
         bottom: 40px;
@@ -50,7 +63,6 @@ export const getHTML = ({
         width: 100%;
         color: #313131;
         font-size: 8px;
-
       }
     </style>
   </head>
@@ -64,17 +76,19 @@ export const getHTML = ({
       </p>
 
       <p style="display: flex; justify-content: space-between">
-        <span>Emitido em: <strong> ${createdAt}</strong> </span>
+        <span>Emitido em: <strong>${createdAt}</strong></span>
         <span>Chave: <strong>${key}</strong></span>
       </p>
+
+      <!-- Adicionando a imagem do QR Code -->
+      <div class="qr-code">
+        ${qrCode}
+      </div>
     </div>
 
     <footer>
-      <p>Acesse o site www.acadflow.vercel.app/validar-certificado para verificar se esse certificado é valido.</p>
+      <p>Acesse o site /validar-certificado para verificar se esse certificado é válido.</p>
     </footer>
   </body>
 </html>
-
-  
-  
     `;

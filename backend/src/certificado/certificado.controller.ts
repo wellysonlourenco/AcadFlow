@@ -1,4 +1,5 @@
 import { PrismaService } from '@/prisma/prisma.service';
+import { QrCodeService } from '@/qr-code-generator/qr-code-generator.service';
 import { Body, Controller, Get, HttpException, HttpStatus, NotImplementedException, Param, ParseIntPipe, Post, Res } from '@nestjs/common';
 import { format } from "date-fns";
 import { Response } from 'express';
@@ -11,11 +12,13 @@ export class CertificadoController {
   constructor(
     private readonly certificadoService: CertificadoService,
     private readonly prisma: PrismaService,
+    private readonly qrCodeService: QrCodeService,
+
   ) { }
 
   @Post()
   async createCertificado(
-    @Body() inscricaoId: number
+    @Body('inscricaoId', ParseIntPipe) inscricaoId: number
   ) {
     return await this.certificadoService.create(inscricaoId);
   }
@@ -50,7 +53,6 @@ export class CertificadoController {
     const eventname = certificado.Inscricao?.Evento?.nome;
     const username = certificado.Inscricao?.Usuario?.nome;
     const key = certificado.chave;
-    const inscricao = certificado.Inscricao?.numeroInscricao;
     const dtStart = certificado.Inscricao?.Evento?.dataInicio;
     const qtdHours = certificado.Inscricao?.Evento?.quantidadeHoras;
     const createdAt = certificado.dataCadastro;
@@ -63,7 +65,7 @@ export class CertificadoController {
       eventname,
       qtdHours,
       username,
-      inscricao,
+      qrCode: await this.qrCodeService.generateQrCode(`${key}`),
       createdAt: format(createdAt ? new Date(createdAt) : new Date(), 'dd/MM/yyyy'),
       key,
       url,
