@@ -1,0 +1,105 @@
+
+Eventos
+
+  evento numero: id 		
+  name      nome
+  status    Inscrições abertas
+  dtStart   Data Evento
+  qtdHours  carga horaria 
+  
+  () USER > Fazer inscrição > se estiver aberta. Desativada caso esteja finalizada.
+  () ADMIN > Desativar Inscrições
+  
+  
+  .:Dialog:.
+  imagem	Banner         
+  
+  dtStart   Data Inicio Evento
+  dtEnd   	Data Final Evento
+  
+  Aberta as incrições
+  Inscrições Até dia: 	dtFinish
+  
+  
+Participacao
+  
+  Inscrição numero: id
+  Nome Participante: userID > name
+  Nome evento:  eventId > name
+  Data inscrição : createdAt
+	
+  .:dialog:.
+  Inscrição
+  Carga horaria
+  (Imprimir Inscrição)
+
+  
+Perfil Usuario:
+
+	Nome: name
+	senha: password
+	confirmar_senha: password
+	avatar: avatar
+
+
+Certificado
+
+	Numero: key
+	insrição numero idParticipation
+	evento: nome
+	carga horaria 
+	gerado dia createdAt
+	(Imprimir)
+	(Enviar Email)
+
+
+
+
+enum Role {
+  USER
+  ADMIN
+}
+
+enum StatusCertificate {
+  WAITING
+  APPROVED
+}
+
+enum Status {
+  ACTIVE
+  INACTIVE
+  CANCELED
+}
+
+
+
+  useEffect(() => {
+    const loadingStoreData = async () => {
+      const storageToken = localStorage.getItem("@Auth:token");
+      if (storageToken) {
+        try {
+          // Verifique o token com o servidor
+          api.defaults.headers.common["Authorization"] = `Bearer ${storageToken}`;
+          setUser({ token: storageToken });
+          console.log(user);
+          //const response = await api.get("/auth/verify"); // Supondo que você tenha um endpoint para verificar o token
+
+          //if (response.data.valid) {
+          //  setUser({ token: storageToken });
+          // Aqui você pode adicionar mais dados do usuário se necessário
+          //} else {
+          // Se o token não for válido, faça logout
+          //  signOut();
+          // }
+        } catch (error) {
+          console.error("Erro ao verificar token:", error);
+          signOut();
+        }
+      }
+    };
+    loadingStoreData();
+  }, []);
+
+
+            //userProfile.perfil === 'admin' ? navigate('/app/dashboard') : navigate('/app/orders');
+          isAuth === true ? navigate('/') : navigate('/sign-in');
