@@ -5,22 +5,29 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
 export interface IUser {
-  id?: number;
-  token?: string;
+  id: number;
+  nome: string;
+  email: string;
+  perfil: 'ADMIN' | 'USER';
+  token: string;
 }
+
+type UserRole = 'ADMIN' | 'USER';
+
 
 interface AuthContextData {
   user: IUser | null;
   signIn: ({ email, senha }: { email: string; senha: string }) => Promise<void>;
   signOut: () => void;
   isAuth: boolean;
+  isAdmin: boolean;
 }
 
 interface UserProfileResponse {
   id: number;
   nome: string;
   email: string;
-  perfil: string;
+  perfil: 'ADMIN' | 'USER';
 }
 
 export const AuthContext = createContext<AuthContextData>(
@@ -29,8 +36,9 @@ export const AuthContext = createContext<AuthContextData>(
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<IUser | null>(null);
-  const navigate = useNavigate();
   const [isAuth, setIsAuth] = useState<boolean>(false);
+  const [isAdmin, setIsAdmin] = useState<boolean>(false);
+  const navigate = useNavigate();
 
 
   const fetchUserProfile = async (token: string) => {
@@ -52,8 +60,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         try {
           api.defaults.headers.common["Authorization"] = `Bearer ${storageToken}`;
           const userProfile = await fetchUserProfile(storageToken);
-          setUser({ token: storageToken, ...userProfile });
+          setUser({ ...userProfile, token: storageToken });
           setIsAuth(true);
+          setIsAdmin(userProfile.perfil === 'ADMIN');
           console.log("User loaded from storage:", userProfile);
         } catch (error) {
           console.error("Erro ao verificar token:", error);
@@ -65,6 +74,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     loadingStoreData();
   }, []);
   
+
+
+
   const signIn = async ({ email, senha }: { email: string; senha: string }) => {
     try {
       const response = await api.post("/auth/login", { email, senha });
@@ -77,11 +89,13 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         localStorage.setItem("@Auth:token", token);
         
         const userProfile = await fetchUserProfile(token);
-        setUser({ token, ...userProfile });
+        const fullUser = { ...userProfile, token };
+        setUser(fullUser);
         setIsAuth(true);
+        setIsAdmin(userProfile.perfil === 'ADMIN');
 
         toast.success("Login realizado com sucesso!");
-        navigate('/'); // Redireciona para a página inicial após o login
+        navigate('/');
       }
     } catch (error) {
       console.log(error);
@@ -89,34 +103,15 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }
   };
 
-  // const signIn = async ({ email, senha }: { email: string; senha: string }) => {
-  //   try {
-  //     const response = await api.post("/auth/login", { email, senha });
-
-  //     if (response.data.error) {
-  //       toast.error(response.data.error);
-  //     } else {
-  //       setUser({ token: response.data.token, id: response.data.id });
-  //       toast.success("Login realizado com sucesso!");
-  //       api.defaults.headers.common["Authorization"] = `Bearer ${response.data.token}`;
-  //       localStorage.setItem("@Auth:token", response.data.token);
-
-  //     }
-  //   } catch (error) {
-  //     console.log(error);
-  //     toast.error('Erro ao logar!')
-  //   }
-  // };
-
   const signOut = () => {
     localStorage.clear();
     setUser(null);
     setIsAuth(false);
+    setIsAdmin(false);
     api.defaults.headers.common["Authorization"] = '';
     toast.success("Logout realizado com sucesso!");
-    navigate('/sign-in'); // Redireciona para a página inicial
+    navigate('/sign-in');
   };
-
 
   return (
     <AuthContext.Provider
@@ -124,7 +119,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         user,
         signIn,
         signOut,
-        isAuth ,
+        isAuth,
+        isAdmin,
       }}
     >
       {children}

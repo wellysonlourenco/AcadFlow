@@ -86,7 +86,7 @@ export function CertificateTableRow({ participacao }: CertificateTableRowProps) 
                 </Button>
             </TableCell>
             <TableCell>
-                <Button variant="ghost" size="xs" className="">
+                <Button variant="outline" size="xs" className="">
                     <Mail className="h-3 w-3 mr-2" />
                     Enviar e-mail
                 </Button>

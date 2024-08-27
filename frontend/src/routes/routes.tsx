@@ -6,14 +6,15 @@ import { Events } from "@/pages/app/events/events";
 import { Inscricoes } from "@/pages/app/inscricoes/inscricao";
 import { Participations } from "@/pages/app/participations/participations";
 import { createBrowserRouter, Outlet } from "react-router-dom";
-import { AppLayout } from "../pages/_layouts/app";
-import { AuthLayout } from "../pages/_layouts/auth";
+
+import { AppLayout } from "@/pages/app/_layouts/app";
+import { AuthLayout } from "@/pages/app/_layouts/auth";
+import { UserProfile } from "@/pages/app/account/profile";
 import { Dashboard } from "../pages/app/dashboard/dashboards";
 import { Orders } from "../pages/app/orders/orders";
 import { SignIn } from "../pages/auth/sing-in";
 import { SignUp } from "../pages/auth/sing-up";
 import { ProtectedRoute } from "./ProtectedRoute";
-import { UserProfile } from "@/pages/app/account/profile";
 
 const AuthProviderWrapper = () => (
   <AuthProvider>
@@ -35,8 +36,13 @@ export const router = createBrowserRouter([
               { path: "/", element: <Dashboard /> },
               { path: "/orders", element: <Orders /> },
               { path: "/events", element: <Events /> },
-              { path: "/categories", element: <Categoria /> },
-              { path: "/events-create", element: <CreateFormEvents /> },
+              {
+                element: <ProtectedRoute allowedRoles={['ADMIN']} />,
+                children: [
+                  { path: "/categories", element: <Categoria /> },
+                  { path: "/events-create", element: <CreateFormEvents /> },
+                ]
+              },
               { path: "/participations", element: <Participations /> },
               { path: "/inscricoes", element: <Inscricoes /> },
               { path: "/certificates", element: <Certificates /> },
