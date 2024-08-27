@@ -14,7 +14,7 @@ export function AuthLayout() {
             <div className='relative hidden h-full flex-col bg-muted p-10 text-white lg:flex dark:border-r'>
                 <div className='relative z-20 flex items-center text-lg font-medium'>
 
-                    <img src="/logo.svg" alt="Logo" className="h-12 w-12" />
+                    <img src="/logo.png" alt="Logo" className="h-12 w-12" />
                     <span className='font-semibold'>AcadFlow - Sistema de Gerenciamento</span>
 
                 </div>
