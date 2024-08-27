@@ -93,7 +93,6 @@ export function Events() {
         <>
             <Helmet title="Eventos" />
             <div className="flex flex-col gap-4">
-                <h1 className="text-3xl font-bold tracking-tight">Eventos</h1>
                 <div className="space-y-2.5">
                     <form onSubmit={handleFilter} className="flex items-center gap-2">
                         <div className="relative w-1/6">

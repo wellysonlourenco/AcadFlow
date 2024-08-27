@@ -1,3 +1,4 @@
+import { TableLoading } from "@/components/table-loading";
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
 import { Table, TableBody, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { AuthContext } from "@/context/AuthContext";
@@ -44,28 +45,14 @@ export function Certificates() {
         refetch();
     }, [currentPage, itemsPerPage, refetch]);
 
-    // function handleFilter(event: FormEvent) {
-    //     event.preventDefault();
-    //     setSearchParams((params) => {
-    //         params.set('page', '1');
-    //         if (filter === '') {
-    //             params.delete('filter');
-    //         } else {
-    //             params.set('filter', filter);
-    //         }
-    //         return params;
-    //     });
-    // }
-
-    // function handleInputChange(event: React.ChangeEvent<HTMLInputElement>) {
-    //     setFilter(event.target.value);
+    // if (isLoading) {
+    //     return <TableLoading />
     // }
 
     return (
         <>
-            <Helmet title="Certificado" />
+            <Helmet title="Certificados" />
             <div className="flex flex-col gap-4">
-                <h1 className="text-3xl font-bold tracking-tight">Certificado</h1>
                 <div className="space-y-2.5">
                     {/* <CertificateTableFilters onFilter={handleFilter} onInputChange={handleInputChange} filterValue={filter} /> */}
 
@@ -84,6 +71,8 @@ export function Certificates() {
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
+                                {isLoading && <TableLoading />}
+
                                 {participacoes?.map((participacao) => (
                                     <CertificateTableRow key={participacao.id} participacao={participacao} />
                                 ))}

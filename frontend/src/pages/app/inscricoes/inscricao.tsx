@@ -81,24 +81,18 @@ export function Inscricoes() {
     return (
         <>
         <Helmet title="Inscrições" />
-        <div className="flex flex-col gap-4">
-                <h1 className="text-3xl font-bold tracking-tight">Inscricoes</h1>
+            <div className="flex flex-col gap-4">
                 <div className="space-y-2.5">
                     <form onSubmit={handleFilter} className="flex items-center gap-2">
-                        <div className="relative">
+                        <div className="relative w-1/6">
+                            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" /> 
                             <Input
                                 type="text"
                                 value={filter}
                                 onChange={handleInputChange}
-                                placeholder="Pesquisar"
-                                className="rounded-md border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 pr-10"
+                                placeholder="Pesquisar o nome do Evento"
+                                className="rounded-md border border-gray-300 px-8 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 pr-7"
                             />
-                            <button
-                                type="submit"
-                                className="absolute inset-y-0 right-0 px-3 flex items-center justify-center"
-                            >
-                                <Search />
-                            </button>
                         </div>
                         {/* <div className="ml-auto flex items-center gap-2">
                             <Button variant="outline" asChild>

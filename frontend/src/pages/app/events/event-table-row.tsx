@@ -92,7 +92,7 @@ export function EventTableRow({ eventos, columnVisibility }: EventTableRowProps)
                         alt="Imagem do Evento"
                         className="aspect-square rounded-md object-cover"
                         height="64"
-                        src={eventos.imagem || ""}
+                        src={eventos.imagem ? eventos.imagem : "events.png"}
                         width="64"
                     />
                 </TableCell>

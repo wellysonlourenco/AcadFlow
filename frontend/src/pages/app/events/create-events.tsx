@@ -36,7 +36,7 @@ export function CreateFormEvents() {
     const navigate = useNavigate();
     const [file, setFile] = useState<File | null>(null);
     const [value, setValue] = useState("")
-    
+
     const form = useForm<CreateEventForm>({
         resolver: zodResolver(createFormEvent),
         mode: 'onChange',
@@ -173,37 +173,39 @@ export function CreateFormEvents() {
                                 <div className="grid gap-3">
                                     <Label htmlFor="categoriaId">Categoria do Evento:</Label>
                                     <Controller
-                                            name="categoriaId"
-                                            control={form.control}
-                                            rules={{ required: true }}
-                                            render={({ field }) => (
-                                                <ComboboxCategorias
-                                                    value={field.value}
-                                                    onValueChange={(value) => {
-                                                        field.onChange(value); // Atualiza o valor do campo com o ID da categoria
-                                                    }}
-                                                />
-                                            )}
+                                        name="categoriaId"
+                                        control={form.control}
+                                        rules={{ required: true }}
+                                        render={({ field }) => (
+                                            <ComboboxCategorias
+                                                value={field.value}
+                                                onValueChange={(value) => {
+                                                    field.onChange(value); // Atualiza o valor do campo com o ID da categoria
+                                                }}
+                                            />
+                                        )}
+                                    />
+                                </div>
+
+                                <div className="flex w-full gap-3">
+                                    <div className="flex-1 grid gap-3">
+                                        <Label htmlFor="dataInicio">Data de Início:</Label>
+                                        <Input
+                                            id="dataInicio"
+                                            type="date"
+                                            {...register("dataInicio")}
                                         />
-                                </div>
+                                    </div>
 
-                                <div className="grid gap-3">
-                                    <Label htmlFor="dataInicio">Data de Início:</Label>
-                                    <Input
-                                        id="dataInicio"
-                                        type="date"
-                                        {...register("dataInicio")}
-                                    />
-                                </div>
-
-                                <div className="grid gap-3">
-                                    <Label htmlFor="dataFim">Data de Fim:</Label>
-                                    <Input
-                                        id="dataFim"
-                                        type="date"
-                                        {...register("dataFim")}
-                                    />
-                                    {errors.dataFim && <p className="text-red-500 text-sm">Precisa preencher a data</p>}
+                                    <div className="flex-1 grid gap-3">
+                                        <Label htmlFor="dataFim">Data de Fim:</Label>
+                                        <Input
+                                            id="dataFim"
+                                            type="date"
+                                            {...register("dataFim")}
+                                        />
+                                        {errors.dataFim && <p className="text-red-500 text-sm">Precisa preencher a data</p>}
+                                    </div>
                                 </div>
                             </form>
                         </CardContent>
