@@ -77,7 +77,6 @@ export class InscricaoController {
   }
 
 
-  
 
   @Get('usuario/:id')
   async findInscricaoByUsuarioId(
@@ -103,6 +102,21 @@ export class InscricaoController {
 
   }
 
+  @Get('/certificates/:usuarioId')
+  async getCertificatesByUserId(
+    @Param('usuarioId', ParseIntPipe) usuarioId: number
+  ) {
+    const certificados =  await this.prisma.inscricao.findMany({
+      where: {
+        usuarioId
+      },
+      include: {
+        Evento: true,
+        Certificado: true
+      }
+    })
+    return certificados
+  }
 
 
   @Get(':id')
@@ -154,5 +168,6 @@ export class InscricaoController {
     res.setHeader('Content-Type', 'application/pdf')
     res.end(file)
   }
+
 
 }

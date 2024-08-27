@@ -1,19 +1,18 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { BarChart } from "lucide-react";
-import { Cell, Pie, PieChart, ResponsiveContainer } from 'recharts';
+import { PieChart } from "lucide-react";
+import { Cell, Pie, PieChart as RechartsPieChart, ResponsiveContainer } from 'recharts';
 import colors from "tailwindcss/colors";
+import { useEffect, useState } from 'react';
+import { API_URL } from "@/lib/api";
 
-
-
-const data = [
-    { product: 'Curso', amount: 1200 },
-    { product: 'Apresentação', amount: 800 },
-    { product: 'Palestra', amount: 900 },
-    { product: 'Workshop', amount: 1300 },
-    { product: 'Congresso', amount: 2000 },
-
-]
-
+// Definindo o tipo para os dados da API
+type CategoriaEvento = {
+    id: number;
+    descricao: string;
+    _count: {
+        Evento: number;
+    };
+};
 
 const COLORS = [
     colors.sky[500],
@@ -21,24 +20,47 @@ const COLORS = [
     colors.violet[500],
     colors.emerald[500],
     colors.rose[500],
-]
+];
 
-export function PopularProductsChart() {
+export function CategoriaEventosChart() {
+    const [data, setData] = useState<CategoriaEvento[]>([]);
+
+    useEffect(() => {
+        // Função para buscar os dados da API
+        const fetchData = async () => {
+            try {
+                const response = await fetch(`${API_URL}/categoria/contagem-eventos`);
+                const result = await response.json();
+                setData(result);
+            } catch (error) {
+                console.error('Erro ao buscar dados:', error);
+            }
+        };
+
+        fetchData();
+    }, []);
+
+    // Transformando os dados para o formato esperado pelo gráfico
+    const chartData = data.map(item => ({
+        descricao: item.descricao,
+        quantidade: item._count.Evento
+    }));
+
     return (
         <Card className="col-span-3">
             <CardHeader className="pb-8">
                 <div className="flex items-center justify-between">
-                    <CardTitle className="text-base font-medium">Incrições populares</CardTitle>
-                    <BarChart className="h-4 w-4 text-muted-foreground" />
+                    <CardTitle className="text-base font-medium">Eventos por Categoria</CardTitle>
+                    <PieChart className="h-4 w-4 text-muted-foreground" />
                 </div>
             </CardHeader>
             <CardContent>
                 <ResponsiveContainer width="100%" height={240} >
-                    <PieChart style={{ fontSize: 12 }}>
+                    <RechartsPieChart style={{ fontSize: 12 }}>
                         <Pie
-                            data={data}
-                            dataKey="amount"
-                            nameKey="product"
+                            data={chartData}
+                            dataKey="quantidade"
+                            nameKey="descricao"
                             cx="50%"
                             cy="50%"
                             outerRadius={86}
@@ -67,30 +89,23 @@ export function PopularProductsChart() {
                                         textAnchor={x > cx ? 'start' : 'end'}
                                         dominantBaseline="central"
                                     >
-                                        {data[index].product.length > 12
-                                            ? data[index].product.substring(0, 12).concat('...')
-                                            : data[index].product}{' '}
+                                        {chartData[index].descricao.length > 1
+                                            ? chartData[index].descricao.substring(0, 12).concat('...')
+                                            : chartData[index].descricao}{' '}
                                         ({value})
                                     </text>
                                 )
                             }}
                         >
-                            {data.map((_, index) => {
-
-                                return (
-                                    <Cell
-                                        key={`cell-${index}`}
-                                        fill={COLORS[index]}
-                                        className="stroke-background hover:opacity-80"
-
-                                    />
-                                )
-                            })}
-
-
+                            {chartData.map((_, index) => (
+                                <Cell
+                                    key={`cell-${index}`}
+                                    fill={COLORS[index % COLORS.length]}
+                                    className="stroke-background hover:opacity-80"
+                                />
+                            ))}
                         </Pie>
-
-                    </PieChart>
+                    </RechartsPieChart>
                 </ResponsiveContainer>
             </CardContent>
         </Card>

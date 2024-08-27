@@ -80,4 +80,16 @@ export class CertificadoController {
     res.end(file)
   }
 
+
+  @Get()
+  async getCategoria(
+    inscricaoId: number
+  ) {
+    const cartificados = await this.prisma.certificado.findMany({
+      where: {
+        inscricaoId: inscricaoId
+      }
+    });
+    return cartificados;
+  }
 }

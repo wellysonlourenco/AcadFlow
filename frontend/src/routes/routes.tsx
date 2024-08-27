@@ -13,6 +13,7 @@ import { Orders } from "../pages/app/orders/orders";
 import { SignIn } from "../pages/auth/sing-in";
 import { SignUp } from "../pages/auth/sing-up";
 import { ProtectedRoute } from "./ProtectedRoute";
+import { UserProfile } from "@/pages/app/account/profile";
 
 const AuthProviderWrapper = () => (
   <AuthProvider>
@@ -39,6 +40,7 @@ export const router = createBrowserRouter([
               { path: "/participations", element: <Participations /> },
               { path: "/inscricoes", element: <Inscricoes /> },
               { path: "/certificates", element: <Certificates /> },
+              { path: "/minha-conta", element: <UserProfile /> },
             ],
           },
         ],
