@@ -9,7 +9,11 @@ interface ProtectedRouteProps {
 
 
 export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ allowedRoles }) => {
-  const { isAuth, user } = useContext(AuthContext);
+  const { isAuth, user, isInitialized } = useContext(AuthContext);
+
+  if (!isInitialized) {
+    return <div>Carregando...</div>;
+  }
 
   if (!isAuth) {
     return <Navigate to="/sign-in" replace />;
@@ -21,14 +25,3 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ allowedRoles }) 
 
   return <Outlet />;
 };
-
-
-// export const ProtectedRoute = () => {
-//   const { isAuth } = useContext(AuthContext);
-
-//   if (!isAuth) {
-//     <Navigate to="/sign-in" replace />;
-//   }
-
-//   return <Outlet />;
-// };

@@ -21,6 +21,8 @@ interface AuthContextData {
   signOut: () => void;
   isAuth: boolean;
   isAdmin: boolean;
+  isLoading: boolean;
+  isInitialized: boolean;
 }
 
 interface UserProfileResponse {
@@ -38,6 +40,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<IUser | null>(null);
   const [isAuth, setIsAuth] = useState<boolean>(false);
   const [isAdmin, setIsAdmin] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isInitialized, setIsInitialized] = useState(false);
+
+
   const navigate = useNavigate();
 
 
@@ -55,6 +61,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   
   useEffect(() => {
     const loadingStoreData = async () => {
+      setIsLoading(true);
       const storageToken = localStorage.getItem("@Auth:token");
       if (storageToken) {
         try {
@@ -69,6 +76,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           signOut();
         }
       }
+      setIsLoading(false);
+      setIsInitialized(true);
     };
     
     loadingStoreData();
@@ -121,6 +130,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         signOut,
         isAuth,
         isAdmin,
+        isLoading,
+        isInitialized,
       }}
     >
       {children}
