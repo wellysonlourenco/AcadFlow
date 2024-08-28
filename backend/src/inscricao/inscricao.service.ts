@@ -25,8 +25,11 @@ export class InscricaoService {
         await this.usuarioService.exists(usuarioId);
         await this.eventoService.exists(eventoId);
 
-        const numeroInscricao = usuarioId + crypto.randomBytes(3).toString('hex') + eventoId;
+        console.log(eventoId)
 
+        const numeroInscricao = usuarioId + crypto.randomBytes(1).toString('hex').toUpperCase() + eventoId + crypto.randomBytes(1).toString('hex').toUpperCase();
+
+        console.log(numeroInscricao);
         try {
             const inscricao = await this.prisma.inscricao.create({
                 data: {
@@ -155,7 +158,7 @@ export class InscricaoService {
 
         doc.moveDown();
         inscricoes.forEach((inscricao, index) => {
-            doc.fontSize(12).text(`${index + 1}. ${inscricao.Usuario.nome} - ${inscricao.numeroInscricao}`);
+            doc.fontSize(10).text(`${index + 1}. Nome:  ${inscricao.Usuario.nome} - Inscricao:  ${inscricao.numeroInscricao} - E-mail: ${inscricao.Usuario.email} `);
             doc.moveDown();
         });
 
