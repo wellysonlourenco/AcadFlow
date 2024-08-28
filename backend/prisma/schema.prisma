@@ -42,11 +42,12 @@ model Evento {
   descricao       String?     @db.Text
   dataInicio      DateTime    @map("dt_inicio") @db.Timestamp(0)
   dataFim         DateTime    @map("dt_fim") @db.Timestamp(0)
-  local           String?      @db.VarChar(100)
+  local           String?     @db.VarChar(100)
   quantidadeHoras Int         @map("qtd_horas")
   quantidadeVagas Int?        @map("qtd_vagas")
   status          Status      @default(ATIVO)
   imagem          String?     @db.VarChar(120)
+  eventoOnline    Boolean?    @default(false) @map("evento_online")
   categoriaId     Int         @map("categoria_id")
   dataCadastro    DateTime?   @default(now()) @map("dt_cadastro") @db.Timestamp(0)
   Categoria       Categoria   @relation(fields: [categoriaId], references: [id])
