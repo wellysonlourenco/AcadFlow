@@ -11,7 +11,7 @@ export interface CertificateTableRowProps {
 }
 
 export function CertificateTableRow({ participacao }: CertificateTableRowProps) {
-    const certificado = participacao.Certificado[0]; // Assumindo que queremos o primeiro certificado
+    const certificado = participacao.Certificado[0]; // Might be undefined
     const [open, setOpen] = useState(false);
     const [downloading, setDownloading] = useState(false);
 
@@ -32,7 +32,6 @@ export function CertificateTableRow({ participacao }: CertificateTableRowProps) 
             document.body.appendChild(link);
             link.click();
 
-            // Limpeza para liberar memória
             link.remove();
             window.URL.revokeObjectURL(url);
 
@@ -42,8 +41,6 @@ export function CertificateTableRow({ participacao }: CertificateTableRowProps) 
             setDownloading(false);
         }
     };
-
-
 
     return (
         <TableRow>
@@ -55,38 +52,27 @@ export function CertificateTableRow({ participacao }: CertificateTableRowProps) 
                             <span className="sr-only">Detalhes do Certificado</span>
                         </Button>
                     </DialogTrigger>
-
-                    {/* <CertificateDatails participacao={participacao} /> */}
-
                 </Dialog>
             </TableCell>
-            <TableCell className="font-mono text-xs font-medium">{certificado.chave}</TableCell>
+            <TableCell className="font-mono text-xs font-medium">{certificado?.chave || 'N/A'}</TableCell>
             <TableCell className="">{participacao.Evento.nome}</TableCell>
             <TableCell className="text-muted-foreground">{participacao.numeroInscricao}</TableCell>
             <TableCell className="font-medium">{participacao.Evento.quantidadeHoras} horas</TableCell>
-            <TableCell className="font-medium">{new Date(certificado.dataCadastro).toLocaleDateString()}</TableCell>
+            <TableCell className="font-medium">
+                {certificado ? new Date(certificado.dataCadastro).toLocaleDateString() : 'N/A'}
+            </TableCell>
             <TableCell>
                 <Button
-                    variant="outline"
-                    size="xs"
-                    onClick={() => setOpen(!open)}
+                    variant="ghost"
                     className="text-foreground hover:underline"
-                    asChild
+                    onClick={handleGenerateCertificate}
+                    disabled={downloading || !certificado}
                 >
-                    <Button
-                        variant="ghost"
-                        className="text-foreground hover:underline"
-                        onClick={handleGenerateCertificate}
-                        disabled={downloading}
-                    >
-                        <Printer size={19} className="h-3 w-3 mr-2" /> Imprimir
-                    </Button>
-                    {/* <Printer className="h-3 w-3 mr-2" />
-                    Imprimir */}
+                    <Printer size={19} className="h-3 w-3 mr-2" /> Imprimir
                 </Button>
             </TableCell>
             <TableCell>
-                <Button variant="outline" size="xs" className="">
+                <Button variant="ghost" size="xs" className="" disabled={!certificado}>
                     <Mail className="h-3 w-3 mr-2" />
                     Enviar e-mail
                 </Button>

@@ -102,7 +102,7 @@ export class InscricaoController {
 
   }
 
-  @Get('/certificates/:usuarioId')
+  @Get('/certificates/usuario/:usuarioId')
   async getCertificatesByUserId(
     @Param('usuarioId', ParseIntPipe) usuarioId: number
   ) {
