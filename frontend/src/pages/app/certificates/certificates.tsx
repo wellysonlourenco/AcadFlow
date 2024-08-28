@@ -1,6 +1,5 @@
 import { TableLoading } from "@/components/table-loading";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { AuthContext } from "@/context/AuthContext";
 import { api } from "@/lib/api";
@@ -44,48 +43,60 @@ export function Certificates() {
         refetch();
     }, [currentPage, itemsPerPage, refetch]);
 
+    // Filtrar apenas as participações que têm certificados
+    const participacoesComCertificado = participacoes?.filter(
+        (participacao) => participacao.Certificado && participacao.Certificado.length > 0
+    ) || [];
+
     return (
         <>
             <Helmet title="Certificados" />
             <Card>
                 <CardHeader>
                     <CardTitle>Certificados</CardTitle>
+                    <CardDescription>Confira os certificados dos eventos que você participou.</CardDescription>
                 </CardHeader>
                 <CardContent>
-                    <div className="overflow-x-auto">
-                        <Table>
-                            <TableHeader>
-                                <TableRow>
-                                    {/* <TableHead className="w-[64px]"></TableHead> */}
-                                    <TableHead className="w-[140px]">Registro</TableHead>
-                                    <TableHead>Evento</TableHead>
-                                    <TableHead className="w-[180px]">Inscrição</TableHead>
-                                    <TableHead className="w-[140px]">Carga Horária</TableHead>
-                                    <TableHead className="w-[140px]">Emitido em</TableHead>
-                                    <TableHead className="w-[164px]"></TableHead>
-                                    <TableHead className="w-[132px]"></TableHead>
-                                </TableRow>
-                            </TableHeader>
-                            <TableBody>
-                                {isLoading ? (
-                                    <TableLoading />
-                                ) : (
-                                    participacoes?.map((participacao) => (
-                                        <CertificateTableRow key={participacao.id} participacao={participacao} />
-                                    ))
-                                )}
-                            </TableBody>
-                        </Table>
-                    </div>
+                    {participacoesComCertificado.length > 0 ? (
+                        <div className="overflow-x-auto">
+                            <Table>
+                                <TableHeader>
+                                    <TableRow>
+                                        {/* <TableHead className="w-[64px]"></TableHead> */}
+                                        <TableHead className="w-[140px]">Registro</TableHead>
+                                        <TableHead>Evento</TableHead>
+                                        <TableHead className="w-[180px]">Inscrição</TableHead>
+                                        <TableHead className="w-[140px]">Carga Horária</TableHead>
+                                        <TableHead className="w-[140px]">Emitido em</TableHead>
+                                        <TableHead className="w-[164px]"></TableHead>
+                                        <TableHead className="w-[132px]"></TableHead>
+                                    </TableRow>
+                                </TableHeader>
+                                <TableBody>
+                                    {isLoading ? (
+                                        <TableLoading />
+                                    ) : (
+                                        participacoes?.map((participacao) => (
+                                            <CertificateTableRow key={participacao.id} participacao={participacao} />
+                                        ))
+                                    )}
+                                </TableBody>
+                            </Table>
+                        </div>
+                    ) : (
+                        <div className="flex items-center justify-center h-96">
+                            <p className="text-lg text-gray-500">Nenhum certificado encontrado.</p>
+                        </div>
+                    )}
 
-                    <Pagination className="mt-4">
+                    {/* <Pagination className="mt-4">
                         <PaginationContent>
                             <PaginationItem>
                                 <PaginationPrevious
                                     onClick={() => handlePageChange(currentPage - 1)}
                                     className={currentPage === 1 ? 'pointer-events-none opacity-50' : ''}
                                 />
-                            </PaginationItem>
+                            </PaginatiosnItem>
                             {Array.from({ length: totalPages }, (_, i) => (
                                 <PaginationItem key={i}>
                                     <PaginationLink
@@ -103,9 +114,9 @@ export function Certificates() {
                                 />
                             </PaginationItem>
                         </PaginationContent>
-                    </Pagination>
+                    </Pagination> */}
                 </CardContent>
-            </Card>
+            </Card >
         </>
     );
 }
