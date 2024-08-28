@@ -16,11 +16,9 @@ export class CertificadoController {
 
   ) { }
 
-  @Post()
-  async createCertificado(
-    @Body('inscricaoId', ParseIntPipe) inscricaoId: number
-  ) {
-    return await this.certificadoService.create(inscricaoId);
+  @Post('gerar')
+  async gerarCertificado(@Body('numeroInscricao') numeroInscricao: string) {
+    return this.certificadoService.gerarCertificado(numeroInscricao);
   }
 
   @Get('carga-horaria')

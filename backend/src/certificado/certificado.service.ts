@@ -1,6 +1,5 @@
 import { PrismaService } from '@/prisma/prisma.service';
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { Status } from '@prisma/client';
+import { HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
 
 @Injectable()
 export class CertificadoService {
@@ -9,23 +8,51 @@ export class CertificadoService {
     ) { }
 
 
-    async create(inscricaoId: number,) {
+    // async create(inscricaoId: number,) {
 
-        try {
-            const certificado = await this.prisma.certificado.create({
-                data: {
-                    inscricaoId,
-                    status: 'LIBERADO',
-                    //url: url || undefined || null,
-                },
-            });
+    //     try {
+    //         const certificado = await this.prisma.certificado.create({
+    //             data: {
+    //                 inscricaoId,
+    //                 status: 'LIBERADO',
+    //                 //url: url || undefined || null,
+    //             },
+    //         });
 
-            return certificado;
-        } catch (error) {
-            console.error('Erro ao criar certificado:', error);
-            throw new HttpException('Erro ao criar certificado', HttpStatus.INTERNAL_SERVER_ERROR);
+    //         return certificado;
+    //     } catch (error) {
+    //         console.error('Erro ao criar certificado:', error);
+    //         throw new HttpException('Erro ao criar certificado', HttpStatus.INTERNAL_SERVER_ERROR);
+    //     }
+    // }
+
+
+    async gerarCertificado(numeroInscricao: string): Promise<any> {
+        // Buscar a inscrição pelo numeroInscricao
+        const inscricao = await this.prisma.inscricao.findFirst({
+            where: { numeroInscricao },
+        });
+
+        if (!inscricao) {
+            throw new NotFoundException('Inscrição não encontrada');
         }
+
+        // Gerar o certificado associado a essa inscrição
+        const certificado = await this.prisma.certificado.create({
+            data: {
+                inscricaoId: inscricao.id,
+                dataCadastro: new Date(),
+                status: 'LIBERADO',
+            },
+        });
+
+        return certificado;
     }
+
+
+
+
+
 
     async exists(inscricaoId: number) {
         const inscricao = await this.prisma.inscricao.findUnique({
@@ -39,20 +66,20 @@ export class CertificadoService {
         }
     }
 
-    async gerarCertificado(inscricaoId: number, status: Status) {
-        await this.exists(inscricaoId);
+    // async gerarCertificado(inscricaoId: number, status: Status) {
+    //     await this.exists(inscricaoId);
 
-        const certificado = await this.prisma.certificado.update ({
-            where: {
-                inscricaoId,
-            },
-            data: {
-                status: 'LIBERADO',
-            },
-        });
+    //     const certificado = await this.prisma.certificado.update ({
+    //         where: {
+    //             inscricaoId,
+    //         },
+    //         data: {
+    //             status: 'LIBERADO',
+    //         },
+    //     });
 
-        return certificado;
-    }
+    //     return certificado;
+    // }
 
     //buscar a carga horária dos eventos relacionados aos certificados com status "LIBERADO".
     async getTotalCargaHoraria(): Promise<number> {

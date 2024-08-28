@@ -1,4 +1,5 @@
-import { Body, Controller, Delete, Get, HttpCode, Param, ParseIntPipe, Post, Put } from '@nestjs/common';
+import { OrderParamSchema, orderValidationPipe, PageParamSchema, pageValidatioPipe, PerPageParamSchema, perPageValidationPipe, SearchParamSchema, searchValidationPipe } from '@/schema/page-param';
+import { Body, Controller, Delete, Get, HttpCode, Param, ParseIntPipe, Post, Put, Query } from '@nestjs/common';
 import { CategoriaService } from './categoria.service';
 
 @Controller('categoria')
@@ -34,29 +35,29 @@ export class CategoriaController {
 
 
 
-  // @Get()
-  // @HttpCode(200) 
-  // async getCategorias(
-  //   @Query('page', pageValidatioPipe) page: PageParamSchema,
-  //   @Query('limit', perPageValidationPipe) limit: PerPageParamSchema,
-  //   @Query('search', searchValidationPipe) search: SearchParamSchema,
-  //   @Query('sort', orderValidationPipe) sort: OrderParamSchema,
-  // ) {
-  //   const take = limit || 10;
-  //   const skip = limit * (page - 1);
-  //   const searchString = search || '';
-  //   const orderBy = sort;
+  @Get()
+  @HttpCode(200)
+  async getCategorias(
+    @Query('page', pageValidatioPipe) page: PageParamSchema,
+    @Query('limit', perPageValidationPipe) limit: PerPageParamSchema,
+    @Query('search', searchValidationPipe) search: SearchParamSchema,
+    @Query('sort', orderValidationPipe) sort: OrderParamSchema,
+  ) {
+    const take = limit || 10;
+    const skip = limit * (page - 1);
+    const searchString = search || '';
+    const orderBy = sort;
    
-  //   const [categorias, countCategorias] = await Promise.all([
-  //     this.categoriaService.get(take, skip, searchString, orderBy),
-  //     this.categoriaService.getCategoriasCount()
-  //   ])
+    const [categorias, countCategorias] = await Promise.all([
+      this.categoriaService.get(take, skip, searchString, orderBy),
+      this.categoriaService.getCategoriasCount()
+    ])
 
-  //   const countPages = Math.ceil(countCategorias / take);
+    const countPages = Math.ceil(countCategorias / take);
 
-  //   return { categorias, page, limit: take, countPages, countCategorias }
+    return { categorias, page, limit: take, countPages, countCategorias }
 
-  // }
+  }
 
 
 
