@@ -1,8 +1,7 @@
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import { TableCell, TableRow } from "@/components/ui/table";
 import { api } from "@/lib/api";
-import { Mail, Printer, Search } from "lucide-react";
+import { Mail, Printer } from "lucide-react";
 import { useState } from "react";
 import { ParticipacaoResponse } from "./interfaces/certificates";
 
@@ -11,30 +10,23 @@ export interface CertificateTableRowProps {
 }
 
 export function CertificateTableRow({ participacao }: CertificateTableRowProps) {
-    const certificado = participacao.Certificado[0]; // Might be undefined
-    const [open, setOpen] = useState(false);
+    const certificado = participacao.Certificado[0];
     const [downloading, setDownloading] = useState(false);
-
-    const participacaoId = participacao.id;
 
     const handleGenerateCertificate = async () => {
         try {
             setDownloading(true);
-
-            const response = await api.get(`/certificado/${participacaoId}`, {
+            const response = await api.get(`/certificado/${participacao.id}`, {
                 responseType: 'blob',
             });
-
             const url = window.URL.createObjectURL(new Blob([response.data]));
             const link = document.createElement('a');
             link.href = url;
             link.setAttribute('download', `${participacao.Evento.nome}.pdf`);
             document.body.appendChild(link);
             link.click();
-
             link.remove();
             window.URL.revokeObjectURL(url);
-
         } catch (error) {
             console.error("Erro ao gerar o comprovante:", error);
         } finally {
@@ -43,40 +35,46 @@ export function CertificateTableRow({ participacao }: CertificateTableRowProps) 
     };
 
     return (
-        <TableRow>
-            <TableCell>
+        <TableRow className="overflow-x-auto">
+            {/* <TableCell className="whitespace-nowrap">
                 <Dialog>
                     <DialogTrigger asChild>
-                        <Button variant="outline" size="xs">
-                            <Search className="h-3 w-3" />
+                        <Button variant="outline" size="sm">
+                            <Search className="h-4 w-4" />
                             <span className="sr-only">Detalhes do Certificado</span>
                         </Button>
                     </DialogTrigger>
                 </Dialog>
+            </TableCell> */}
+
+            <TableCell className="font-mono text-sm font-medium whitespace-nowrap">
+                {certificado.chave}
             </TableCell>
-            <TableCell className="font-mono text-xs font-medium">{certificado?.chave || 'N/A'}</TableCell>
-            <TableCell className="">{participacao.Evento.nome}</TableCell>
-            <TableCell className="text-muted-foreground">{participacao.numeroInscricao}</TableCell>
-            <TableCell className="font-medium">{participacao.Evento.quantidadeHoras} horas</TableCell>
-            <TableCell className="font-medium">
-                {certificado ? new Date(certificado.dataCadastro).toLocaleDateString() : 'N/A'}
+            <TableCell className="whitespace-nowrap text-xs">{participacao.Evento.nome}</TableCell>
+            <TableCell className="text-muted-foreground whitespace-nowrap text-xs">
+                {participacao.numeroInscricao}
             </TableCell>
-            <TableCell>
-                <Button
-                    variant="ghost"
-                    className="text-foreground hover:underline"
-                    onClick={handleGenerateCertificate}
-                    disabled={downloading || !certificado}
-                >
-                    <Printer size={19} className="h-3 w-3 mr-2" /> Imprimir
-                </Button>
+            <TableCell className="whitespace-nowrap text-xs">{participacao.Evento.quantidadeHoras} horas</TableCell>
+            <TableCell className="whitespace-nowrap text-xs">
+                {new Date(certificado.dataCadastro).toLocaleDateString()}
             </TableCell>
-            <TableCell>
-                <Button variant="ghost" size="xs" className="" disabled={!certificado}>
-                    <Mail className="h-3 w-3 mr-2" />
-                    Enviar e-mail
-                </Button>
+            <TableCell className="whitespace-nowrap">
+                <div className="flex gap-x-1 items-center">
+                    <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={handleGenerateCertificate}
+                        disabled={downloading}
+                    >
+                        <Printer className="h-4 w-4 mr-1" />
+                        Imprimir
+                    </Button>
+                    <Button variant="outline" size="sm">
+                        <Mail className="h-4 w-4 mr-1" />
+                        Enviar e-mail
+                    </Button>
+                </div>
             </TableCell>
         </TableRow>
-    )
+    );
 }

@@ -10,6 +10,7 @@ import { createBrowserRouter, Outlet } from "react-router-dom";
 import { AppLayout } from "@/pages/app/_layouts/app";
 import { AuthLayout } from "@/pages/app/_layouts/auth";
 import { UserProfile } from "@/pages/app/account/profile";
+import { EventCard } from "@/pages/app/events/events-card/event-card";
 import { Dashboard } from "../pages/app/dashboard/dashboards";
 import { Orders } from "../pages/app/orders/orders";
 import { SignIn } from "../pages/auth/sing-in";
@@ -36,6 +37,8 @@ export const router = createBrowserRouter([
               { path: "/", element: <Dashboard /> },
               { path: "/orders", element: <Orders /> },
               { path: "/events", element: <Events /> },
+              { path: "/events-card", element: <EventCard /> },
+
               {
                 element: <ProtectedRoute allowedRoles={['ADMIN']} />,
                 children: [
