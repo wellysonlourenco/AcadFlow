@@ -34,7 +34,7 @@ export class EventoController {
           new MaxFileSizeValidator({ maxSize: 3 * 1024 * 1024 }),
           new FileTypeValidator({ fileType: /image\/(jpeg|jpg|png|gif|webp)/ }), // Use a expressão regular para permitir múltiplos tipos
         ],
-        fileIsRequired: false,
+        //fileIsRequired: false,
       }),
     ) file: Express.Multer.File,
   ) {

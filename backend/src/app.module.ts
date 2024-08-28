@@ -23,7 +23,7 @@ import { UsuarioModule } from './usuario/usuario.module';
       isGlobal: true,
     }),
     ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '..', '/assets/uploads/'),
+      rootPath: join(__dirname, '..', '..', '/assets/uploads/'),
     }),
     MailerModule.forRoot({
       transport: {

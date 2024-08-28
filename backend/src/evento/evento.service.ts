@@ -53,7 +53,7 @@ export class EventoService {
 
     async getEventos(take: number, skip: number, searchString: string, orderBy: 'asc' | 'desc') {
 
-        searchString = searchString.toLowerCase();
+        //searchString = searchString.toLowerCase();
 
 
         const eventos = await this.prisma.evento.findMany({

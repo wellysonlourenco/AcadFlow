@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   postgres:
-    container_name: postgres
+    container_name: acadflow-postgres
     image: postgres
     ports:
       - 5432:5432

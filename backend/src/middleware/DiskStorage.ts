@@ -3,7 +3,7 @@ import { diskStorage } from 'multer';
 import * as path from 'path';
 
 const TMP_FOLDER = path.resolve(__dirname, '..', '..', 'tmp');
-const UPLOADS_FOLDER = path.resolve(__dirname, '..', '..', 'assets/uploads/');
+const UPLOADS_FOLDER = path.resolve(__dirname, '..', '..', '..', 'assets/uploads/');
 
 export const multerConfig = {
     storage: diskStorage({
