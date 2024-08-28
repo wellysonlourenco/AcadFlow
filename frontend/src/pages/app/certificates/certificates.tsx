@@ -1,52 +1,32 @@
-import { TableLoading } from "@/components/table-loading";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { AuthContext } from "@/context/AuthContext";
 import { api } from "@/lib/api";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
-import { useContext, useEffect } from "react";
+import { useContext } from "react";
 import { Helmet } from "react-helmet-async";
-import { useSearchParams } from "react-router-dom";
 import { CertificateTableRow } from "./certificate-table-row";
 import { ParticipacaoResponse } from "./interfaces/certificates";
 
 export function Certificates() {
-    const [searchParams, setSearchParams] = useSearchParams();
     const { user } = useContext(AuthContext);
 
     const usuarioId = user?.id as number;
-    const currentPage = Number(searchParams.get('page') ?? '1');
-    const itemsPerPage = Number(searchParams.get('itemsPerPage') ?? '10');
 
-    const { data: participacoes, isLoading, refetch } = useQuery<ParticipacaoResponse[]>({
-        queryKey: ['inscricoes', usuarioId, currentPage, itemsPerPage],
+    const { data: participacoes, isLoading } = useQuery<ParticipacaoResponse[]>({
+        queryKey: ['inscricoes', usuarioId],
         queryFn: async () => {
-            const response = await api.get(`/inscricao/certificates/usuario/${usuarioId}`, {
-                params: { page: currentPage, itemsPerPage }
-            });
+            const response = await api.get(`/inscricao/certificates/usuario/${usuarioId}`);
             return response.data;
         },
         placeholderData: keepPreviousData,
     });
 
-    const totalItems = participacoes?.length ?? 0;
-    const totalPages = Math.ceil(totalItems / itemsPerPage);
-
-    function handlePageChange(page: number) {
-        setSearchParams((params) => {
-            params.set('page', page.toString());
-            return params;
-        });
-    }
-
-    useEffect(() => {
-        refetch();
-    }, [currentPage, itemsPerPage, refetch]);
-
     // Filtrar apenas as participações que têm certificados
     const participacoesComCertificado = participacoes?.filter(
         (participacao) => participacao.Certificado && participacao.Certificado.length > 0
     ) || [];
+
 
     return (
         <>
@@ -73,13 +53,9 @@ export function Certificates() {
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
-                                    {isLoading ? (
-                                        <TableLoading />
-                                    ) : (
-                                        participacoes?.map((participacao) => (
-                                            <CertificateTableRow key={participacao.id} participacao={participacao} />
-                                        ))
-                                    )}
+                                    {participacoesComCertificado.map((participacao) => (
+                                        <CertificateTableRow key={participacao.id} participacao={participacao} />
+                                    ))}
                                 </TableBody>
                             </Table>
                         </div>

@@ -58,7 +58,7 @@ export function CategoriaEditForm({ categorias, className }: CategoriaEditProps)
         },
         onSuccess: (response) => {
             queryClient.invalidateQueries({ queryKey: ['categorias'] })
-            toast.success('Editado com Sucesso!', { duration: 2000 })
+            toast.success('Editado com Sucesso!', { duration: 1000 })
         },
         onError: (error) => {
             toast.error('Erro ao editar', { duration: 2000 })
@@ -96,7 +96,7 @@ export function CategoriaEditForm({ categorias, className }: CategoriaEditProps)
             </DialogTrigger>
             <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>
-                    <DialogTitle>Cadastrar uma nova categoria</DialogTitle>
+                    <DialogTitle>Editar a categoria:</DialogTitle>
                     <DialogDescription>
                     </DialogDescription>
                 </DialogHeader>

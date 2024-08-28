@@ -11,6 +11,7 @@ import { AppLayout } from "@/pages/app/_layouts/app";
 import { AuthLayout } from "@/pages/app/_layouts/auth";
 import { UserProfile } from "@/pages/app/account/profile";
 import { EventCard } from "@/pages/app/events/events-card/event-card";
+import { ValidatePresence } from "@/pages/app/presence/validate-presence";
 import { Dashboard } from "../pages/app/dashboard/dashboards";
 import { Orders } from "../pages/app/orders/orders";
 import { SignIn } from "../pages/auth/sing-in";
@@ -44,6 +45,8 @@ export const router = createBrowserRouter([
                 children: [
                   { path: "/categories", element: <Categoria /> },
                   { path: "/events-create", element: <CreateFormEvents /> },
+                  { path: "/validate-presence", element: <ValidatePresence /> },
+
                 ]
               },
               { path: "/participations", element: <Participations /> },

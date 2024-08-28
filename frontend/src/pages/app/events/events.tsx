@@ -4,10 +4,11 @@ import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMe
 import { Input } from "@/components/ui/input";
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
 import { Table, TableBody, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { AuthContext } from "@/context/AuthContext";
 import { api } from "@/lib/api";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { ListFilter, Search } from "lucide-react";
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, useContext, useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { Link, useSearchParams } from "react-router-dom";
 import { EventTableRow } from "./event-table-row";
@@ -15,6 +16,7 @@ import { EventoResponse } from "./interface/events-response";
 
 export function Events() {
     const [open, setOpen] = useState(false);
+    const { user } = useContext(AuthContext);
     const [searchParams, setSearchParams] = useSearchParams();
     const urlFilter = searchParams.get('filter') ?? '';
     const [filter, setFilter] = useState(urlFilter);
@@ -185,12 +187,13 @@ export function Events() {
 
                                 </DropdownMenuContent>
                             </DropdownMenu>
-
+                            {user && user.perfil === 'ADMIN' && (
                             <Button variant="outline" asChild>
                                 <Link to="/events-create">
                                     Criar Evento
                                 </Link>
                             </Button>
+                            )}
                         </div>
                     </form>
 

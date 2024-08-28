@@ -35,45 +35,39 @@ export function CertificateTableRow({ participacao }: CertificateTableRowProps) 
     };
 
     return (
-        <TableRow className="overflow-x-auto">
-            {/* <TableCell className="whitespace-nowrap">
+        <TableRow>
+            {/* <TableCell>
                 <Dialog>
                     <DialogTrigger asChild>
-                        <Button variant="outline" size="sm">
-                            <Search className="h-4 w-4" />
+                        <Button variant="outline" size="xs">
+                            <Search className="h-3 w-3" />
                             <span className="sr-only">Detalhes do Certificado</span>
                         </Button>
                     </DialogTrigger>
                 </Dialog>
             </TableCell> */}
-
-            <TableCell className="font-mono text-sm font-medium whitespace-nowrap">
-                {certificado.chave}
+            <TableCell className="font-mono text-xs font-medium">{certificado?.chave || 'N/A'}</TableCell>
+            <TableCell className="">{participacao.Evento.nome}</TableCell>
+            <TableCell className="text-muted-foreground">{participacao.numeroInscricao}</TableCell>
+            <TableCell className="font-medium">{participacao.Evento.quantidadeHoras} horas</TableCell>
+            <TableCell className="font-medium">
+                {certificado ? new Date(certificado.dataCadastro).toLocaleDateString() : 'N/A'}
             </TableCell>
-            <TableCell className="whitespace-nowrap text-xs">{participacao.Evento.nome}</TableCell>
-            <TableCell className="text-muted-foreground whitespace-nowrap text-xs">
-                {participacao.numeroInscricao}
+            <TableCell>
+                <Button
+                    variant="ghost"
+                    className="text-foreground hover:underline"
+                    onClick={handleGenerateCertificate}
+                    disabled={downloading || !certificado}
+                >
+                    <Printer size={19} className="h-3 w-3 mr-2" /> Imprimir
+                </Button>
             </TableCell>
-            <TableCell className="whitespace-nowrap text-xs">{participacao.Evento.quantidadeHoras} horas</TableCell>
-            <TableCell className="whitespace-nowrap text-xs">
-                {new Date(certificado.dataCadastro).toLocaleDateString()}
-            </TableCell>
-            <TableCell className="whitespace-nowrap">
-                <div className="flex gap-x-1 items-center">
-                    <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={handleGenerateCertificate}
-                        disabled={downloading}
-                    >
-                        <Printer className="h-4 w-4 mr-1" />
-                        Imprimir
-                    </Button>
-                    <Button variant="outline" size="sm">
-                        <Mail className="h-4 w-4 mr-1" />
-                        Enviar e-mail
-                    </Button>
-                </div>
+            <TableCell>
+                <Button variant="ghost" size="xs" className="" disabled={!certificado}>
+                    <Mail className="h-3 w-3 mr-2" />
+                    Enviar e-mail
+                </Button>
             </TableCell>
         </TableRow>
     );
