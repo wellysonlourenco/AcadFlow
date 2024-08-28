@@ -34,7 +34,11 @@ export class InscricaoController {
   // }
 
   
-  
+  @Get('recent-count')
+  async getRecentInscricaoCount(): Promise<{ count: number }> {
+    const count = await this.inscricaoService.countRecentInscricoes();
+    return { count };
+  }
 
 
 

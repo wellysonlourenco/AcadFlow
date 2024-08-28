@@ -53,4 +53,29 @@ export class CertificadoService {
 
         return certificado;
     }
+
+    //buscar a carga horária dos eventos relacionados aos certificados com status "LIBERADO".
+    async getTotalCargaHoraria(): Promise<number> {
+        const certificados = await this.prisma.certificado.findMany({
+            where: { status: 'LIBERADO' },
+            select: {
+                Inscricao: {
+                    select: {
+                        Evento: {
+                            select: {
+                                quantidadeHoras: true,
+                            },
+                        },
+                    },
+                },
+            },
+        });
+
+        const totalHoras = certificados.reduce((total, certificado) => {
+            return total + (certificado.Inscricao?.Evento?.quantidadeHoras || 0);
+        }, 0);
+
+        return totalHoras;
+    }
+
 }

@@ -23,6 +23,12 @@ export class CertificadoController {
     return await this.certificadoService.create(inscricaoId);
   }
 
+  @Get('carga-horaria')
+  async getTotalCargaHoraria(): Promise<{ totalHoras: number }> {
+    const totalHoras = await this.certificadoService.getTotalCargaHoraria();
+    return { totalHoras };
+  }
+
   @Get(':inscricaoId')
   async generateCertificateFile(
     @Param('inscricaoId', ParseIntPipe) inscricaoId: number,

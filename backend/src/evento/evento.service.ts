@@ -64,8 +64,14 @@ export class EventoService {
         });
     }
 
-
-
+    //contar os eventos com status "ATIVO"
+    async countActiveEvents(): Promise<number> {
+        return this.prisma.evento.count({
+            where: {
+                status: 'ATIVO',
+            },
+        });
+    }
 
 
     async getEventos(take: number, skip: number, searchString: string, orderBy: 'asc' | 'desc') {

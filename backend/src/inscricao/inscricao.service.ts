@@ -4,6 +4,7 @@ import { PrismaService } from '@/prisma/prisma.service';
 import { UsuarioService } from '@/usuario/usuario.service';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import * as crypto from "crypto";
+import { subDays } from 'date-fns';
 import { InscricaoDto } from './dto/inscricao.dto';
 
 @Injectable()
@@ -44,23 +45,18 @@ export class InscricaoService {
 
 
 
-    // async getInscricaoStatus(usuarioId: number, eventoId: number): Promise<boolean> {
-    //     const status = await this.prisma.inscricao.findUnique({
-    //         where: {
-    //             usuarioId,
-    //             eventoId,
-    //         }
-    //     })
+    //Total de inscrições de todos os usuários nos últimos 30 dias
+    async countRecentInscricoes(): Promise<number> {
+        const thirtyDaysAgo = subDays(new Date(), 30);
 
-    //     console.log(status.numeroInscricao)
-
-    //     if (status) {
-    //         return true
-    //     }
-    //     return false
-    // }
-
-
+        return this.prisma.inscricao.count({
+            where: {
+                dataInsc: {
+                    gte: thirtyDaysAgo,
+                },
+            },
+        });
+    }
 
 
     async findByid(id: number) {
@@ -144,27 +140,27 @@ export class InscricaoService {
 
 
 
-async findInscricaoByEventoIdAndUserId(eventoId: number, usuarioId: number):Promise<boolean> {
+    async findInscricaoByEventoIdAndUserId(eventoId: number, usuarioId: number): Promise<boolean> {
 
-    await this.eventoService.exists(eventoId);
+        await this.eventoService.exists(eventoId);
 
-    await this.usuarioService.exists(usuarioId);
+        await this.usuarioService.exists(usuarioId);
 
-    const inscricao = await this.prisma.inscricao.findFirst({
-        where: {
-            eventoId,
-            usuarioId,
-        },
-    });
+        const inscricao = await this.prisma.inscricao.findFirst({
+            where: {
+                eventoId,
+                usuarioId,
+            },
+        });
 
-    //console.log(inscricao)
+        //console.log(inscricao)
 
-    if (inscricao) {
-        return true
-    } else {
-        return false
+        if (inscricao) {
+            return true
+        } else {
+            return false
+        }
     }
-}
 
 
 
