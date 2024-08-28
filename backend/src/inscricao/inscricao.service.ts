@@ -5,6 +5,8 @@ import { UsuarioService } from '@/usuario/usuario.service';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import * as crypto from "crypto";
 import { subDays } from 'date-fns';
+import * as PDFDocument from 'pdfkit';
+import { Stream } from 'stream';
 import { InscricaoDto } from './dto/inscricao.dto';
 
 @Injectable()
@@ -107,21 +109,59 @@ export class InscricaoService {
         return count;
     }
 
-    async findInscriptionsByEvent(eventoId: number, take: number, skip: number, orderBy: 'asc' | 'desc') {
-        await this.eventoService.exists(eventoId);
+    // async findInscriptionsByEvent(eventoId: number, take: number, skip: number, orderBy: 'asc' | 'desc') {
+    //     await this.eventoService.exists(eventoId);
 
-        const inscricoes = await this.prisma.inscricao.findMany({
-            take: take || undefined,
-            skip: skip || undefined,
-            where: {
-                eventoId,
+    //     const inscricoes = await this.prisma.inscricao.findMany({
+    //         take: take || undefined,
+    //         skip: skip || undefined,
+    //         where: {
+    //             eventoId,
+    //         },
+    //         orderBy: {
+    //             id: orderBy,
+    //         }
+    //     });
+
+    //     return inscricoes;
+    // }
+
+    async getInscricoesByEventoId(eventoId: number) {
+        return this.prisma.inscricao.findMany({
+            where: { eventoId },
+            include: {
+                Usuario: true,  // incluir dados relacionados ao usuário
+                Evento: true,   // incluir dados relacionados ao evento
             },
             orderBy: {
-                id: orderBy,
+                Usuario: {
+                    nome: 'asc',
+                },
             }
         });
+    }
 
-        return inscricoes;
+    async generatePdf(eventoId: number): Promise<Stream> {
+        const inscricoes = await this.getInscricoesByEventoId(eventoId);
+
+        const doc = new PDFDocument();
+        const stream = new Stream.PassThrough();
+
+        doc.pipe(stream);
+
+        doc.fontSize(18).text(`Lista de Inscrições para o Evento: ${inscricoes[0].Evento.nome}`, {
+            align: 'center',
+        });
+
+        doc.moveDown();
+        inscricoes.forEach((inscricao, index) => {
+            doc.fontSize(12).text(`${index + 1}. ${inscricao.Usuario.nome} - ${inscricao.numeroInscricao}`);
+            doc.moveDown();
+        });
+
+        doc.end();
+
+        return stream;
     }
 
 

@@ -71,6 +71,26 @@ export class InscricaoController {
   //   return { evento, pagina, porPagina, totalPaginas, totalInscricao }
   // }
 
+  @Get('evento/:eventoId')
+  async getInscricoesByEventoId(@Param('eventoId', ParseIntPipe) eventoId: number) {
+    return this.inscricaoService.getInscricoesByEventoId(eventoId);
+  }
+
+  @Get('evento/:eventoId/pdf')
+  async getInscricoesPdf(
+    @Param('eventoId', ParseIntPipe) eventoId: number,
+    @Res() res: Response,
+  ) {
+    const pdfStream = await this.inscricaoService.generatePdf(eventoId);
+
+    res.set({
+      'Content-Type': 'application/pdf',
+      'Content-Disposition': `attachment; filename="inscricoes_evento_${eventoId}.pdf"`,
+    });
+
+    pdfStream.pipe(res);
+  }
+
 
   @Get('evento/:eventoId/usuario/:usuarioId')
   async findInscricaoByEventoIdAndUserId(
