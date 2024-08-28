@@ -1,13 +1,12 @@
-import { ChevronDown, LogOut, User } from "lucide-react";
-import { AvatarUser } from "./avatar-user";
+import { AuthContext } from "@/context/AuthContext";
+import { api } from "@/lib/api";
+import { keepPreviousData, useQuery, useQueryClient } from "@tanstack/react-query";
+import { ChevronDown, LogOut, Ticket, User } from "lucide-react";
+import { useContext } from "react";
+import { Link } from "react-router-dom";
+import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Button } from "./ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "./ui/dropdown-menu";
-import { useContext } from "react";
-import { AuthContext } from "@/context/AuthContext";
-import { keepPreviousData, useQuery, useQueryClient } from "@tanstack/react-query";
-import { api } from "@/lib/api";
-import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
-import { Link } from "react-router-dom";
 
 interface UserResponseProfile {
     id: number;
@@ -71,6 +70,12 @@ export function AccountMenu() {
                     <Link to="/minha-conta" className="flex items-center gap-2">
                         <User className="w-4 h-4 mr-2" />
                         <span>Minha Conta</span>
+                    </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                    <Link to="/inscricoes" className="flex items-center gap-2">
+                        <Ticket className="w-4 h-4 mr-2" />
+                        <span>Inscrições</span>
                     </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem className="text-rose-500 dark:text-rose-400" onClick={handleSignOut}>

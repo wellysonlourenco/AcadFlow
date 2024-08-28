@@ -3,11 +3,15 @@ import {
     SheetContent,
     SheetTrigger,
 } from "@/components/ui/sheet";
-import { Calendar, GraduationCap, Home, Menu, QrCode } from "lucide-react";
+import { AuthContext } from "@/context/AuthContext";
+import { Calendar, GraduationCap, Home, Menu, QrCode, Tags } from "lucide-react";
+import { useContext } from "react";
 import { NavLink } from "./nav-link";
 import { Button } from "./ui/button";
 
 export function SheetMobile() {
+    const { user } = useContext(AuthContext);
+
     return (
         <Sheet>
             <SheetTrigger asChild>
@@ -29,6 +33,11 @@ export function SheetMobile() {
                     <NavLink to="/certificates">
                         <GraduationCap className="h-4 w-4 mr-2" /> Certificado
                     </NavLink>
+                    {user && user.perfil === 'ADMIN' && (
+                        <NavLink to="/categories">
+                            <Tags className="h-4 w-4" /> Categoria
+                        </NavLink>
+                    )}
                 </nav>
             </SheetContent>
         </Sheet>
