@@ -1,6 +1,7 @@
 import { PrismaService } from '@/prisma/prisma.service';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { Status } from '@prisma/client';
+import { subDays } from 'date-fns';
 import * as fs from 'fs/promises';
 import { EventoDto } from './dto/evento.dto';
 
@@ -48,6 +49,22 @@ export class EventoService {
             }
         })
     }
+
+
+    //Total de eventos cadastrados nos últimos 30 dias 
+    async countRecentEvents(): Promise<number> {
+        const thirtyDaysAgo = subDays(new Date(), 30);
+
+        return this.prisma.evento.count({
+            where: {
+                dataCadastro: {
+                    gte: thirtyDaysAgo,
+                },
+            },
+        });
+    }
+
+
 
 
 

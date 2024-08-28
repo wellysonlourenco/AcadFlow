@@ -58,6 +58,11 @@ export class EventoController {
     )
   }
 
+  @Get('recent-count')
+  async getRecentEventCount(): Promise<{ count: number }> {
+    const count = await this.eventoService.countRecentEvents();
+    return { count };
+  }
 
 
 
@@ -147,6 +152,8 @@ export class EventoController {
     const user = await this.eventoService.updateImagem(id, imagem);
     return user
   }
+
+
 
 
 }
