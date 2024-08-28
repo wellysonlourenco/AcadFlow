@@ -1,11 +1,12 @@
 import { Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
+import * as dotenv from 'dotenv';
 import * as express from 'express';
 import { AppModule } from './app.module';
 import { Env } from './env';
 import { LogInterceptor } from './interceptors/log.interceptor';
-
+dotenv.config();
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -21,7 +22,7 @@ async function bootstrap() {
 
   app.enableCors({
     origin:
-      ['http://localhost:3001',],
+      ['http://localhost:5173',],
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
     credentials: true,
   });
