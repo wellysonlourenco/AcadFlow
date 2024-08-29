@@ -119,12 +119,12 @@ export function EventTableRow({ eventos, columnVisibility }: EventTableRowProps)
                     {eventos.status === "ATIVO" ? (
                         <div className="flex items-center gap-2">
                             <span className="h-2 w-2 rounded-full bg-green-400" />
-                            Ativo
+                            Inscrições abertas
                         </div>
                     ) : (
                         <div className="flex items-center gap-2">
                             <span className="h-2 w-2 rounded-full bg-red-400" />
-                            Inativo
+                                inscrições encerradas
                         </div>
                     )}
                 </TableCell>
