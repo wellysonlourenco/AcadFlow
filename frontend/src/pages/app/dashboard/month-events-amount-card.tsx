@@ -1,18 +1,38 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { api } from "@/lib/api";
+import { useQuery } from "@tanstack/react-query";
 import { CalendarCheck } from "lucide-react";
 
+
+export interface TotalEventosUltimoMesResponse {
+    count: number;
+  }
+
+
 export function MonthEventsAmountCard() {
+
+
+    const { data :  totalEventosUltimoMes } = useQuery<TotalEventosUltimoMesResponse>({
+        queryKey: ['total-eventos-ultimo-mes'],
+        queryFn: async () => {
+            const response = await api.get('/evento/recent-count');
+            return response.data;
+        },
+        placeholderData: { count: 0 },
+    });
+
+
     return (
         <Card>
             <CardHeader className="flex-row items-center space-y-0 justify-between pb-2">
-                <CardTitle className="text-base font-semibold">Total de Eventos Cadastrados (mês)</CardTitle>
+                <CardTitle className="text-sm font-semibold">Total de Eventos Cadastrados nos últimos 30 dias</CardTitle>
                 <CalendarCheck className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent className="space-y-1">
-                <span className="text-2xl font-bold tracking-tight">246</span>
-                <p className="text-xs text-muted-foreground">
+                <span className="text-2xl font-bold tracking-tight">{totalEventosUltimoMes?.count} eventos</span>
+                {/* <p className="text-xs text-muted-foreground">
                     <span className="text-emerald-500 dark:text-emerald-400">+2 %</span> em relação ao mês passado.
-                </p>
+                </p> */}
             </CardContent>
         </Card>
     );

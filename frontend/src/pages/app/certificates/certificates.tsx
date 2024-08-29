@@ -8,10 +8,25 @@ import { Helmet } from "react-helmet-async";
 import { CertificateTableRow } from "./certificate-table-row";
 import { ParticipacaoResponse } from "./interfaces/certificates";
 
+
+export interface CargaHorariaTotalResponse {
+    totalHoras: number;
+  }
+
 export function Certificates() {
     const { user } = useContext(AuthContext);
 
     const usuarioId = user?.id as number;
+
+    const { data: cargaHorariaTotal } = useQuery<CargaHorariaTotalResponse>({
+        queryKey: ['carga-horaria-total'],
+        queryFn: async () => {
+            const response = await api.get(`/certificado/carga-horaria`);
+            return response.data;
+        },
+        placeholderData: { totalHoras: 0 },
+    });
+
 
     const { data: participacoes, isLoading } = useQuery<ParticipacaoResponse[]>({
         queryKey: ['inscricoes', usuarioId],
@@ -35,6 +50,8 @@ export function Certificates() {
                 <CardHeader>
                     <CardTitle>Certificados</CardTitle>
                     <CardDescription>Confira os certificados dos eventos que você participou.</CardDescription>
+                    <CardDescription className="font-bold"> Total de Horas: {cargaHorariaTotal?.totalHoras} horas</CardDescription>
+                    {/* <CardDescription>Para baixar o certificado, clique no botão "Baixar".</CardDescription> */}
                 </CardHeader>
                 <CardContent>
                     {participacoesComCertificado.length > 0 ? (
