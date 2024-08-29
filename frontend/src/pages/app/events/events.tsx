@@ -1,8 +1,8 @@
+import { Paginacao } from "@/components/paginacao";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
-import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
 import { Table, TableBody, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { AuthContext } from "@/context/AuthContext";
 import { api } from "@/lib/api";
@@ -45,11 +45,17 @@ export function Events() {
 
     const totalPages = eventoResponse?.countPages || 1;
 
-
-
     function handlePageChange(page: number) {
         setSearchParams((params) => {
             params.set('page', page.toString());
+            return params;
+        });
+    }
+
+    function handleRowsPerPageChange(newRowsPerPage: number) {
+        setSearchParams((params) => {
+            params.set('itemsPerPage', newRowsPerPage.toString());
+            params.set('page', '1');
             return params;
         });
     }
@@ -98,7 +104,7 @@ export function Events() {
                 <div className="space-y-2.5">
                     <form onSubmit={handleFilter} className="flex items-center gap-2">
                         <div className="relative w-1/6">
-                            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground"/> 
+                            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
                             <Input
                                 type="text"
                                 value={filter}
@@ -188,11 +194,11 @@ export function Events() {
                                 </DropdownMenuContent>
                             </DropdownMenu>
                             {user && user.perfil === 'ADMIN' && (
-                            <Button variant="outline" asChild>
-                                <Link to="/events-create">
-                                    Criar Evento
-                                </Link>
-                            </Button>
+                                <Button variant="outline" asChild>
+                                    <Link to="/events-create">
+                                        Criar Evento
+                                    </Link>
+                                </Button>
                             )}
                         </div>
                     </form>
@@ -228,32 +234,14 @@ export function Events() {
                                         </TableBody>
                                     </Table>
                                 </div>
-                                <Pagination className="mt-4">
-                                    <PaginationContent>
-                                        <PaginationItem>
-                                            <PaginationPrevious
-                                                onClick={() => handlePageChange(currentPage - 1)}
-                                                className={currentPage === 1 ? 'pointer-events-none opacity-50' : ''}
-                                            />
-                                        </PaginationItem>
-                                        {[...Array(totalPages)].map((_, i) => (
-                                            <PaginationItem key={i}>
-                                                <PaginationLink
-                                                    onClick={() => handlePageChange(i + 1)}
-                                                    isActive={currentPage === i + 1}
-                                                >
-                                                    {i + 1}
-                                                </PaginationLink>
-                                            </PaginationItem>
-                                        ))}
-                                        <PaginationItem>
-                                            <PaginationNext
-                                                onClick={() => handlePageChange(currentPage + 1)}
-                                                className={currentPage === totalPages ? 'pointer-events-none opacity-50' : ''}
-                                            />
-                                        </PaginationItem>
-                                    </PaginationContent>
-                                </Pagination>
+                                <Paginacao
+                                    totalPages={totalPages}
+                                    currentPage={currentPage}
+                                    setCurrentPage={handlePageChange}
+                                    rowsPerPage={itemsPerPage}
+                                    setRowsPerPage={handleRowsPerPageChange}
+                                    totalRows={eventoResponse?.eventosCount || 0}
+                                />
                             </CardContent>
                         </Card>
                     </div>
