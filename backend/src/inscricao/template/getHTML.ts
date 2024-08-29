@@ -3,6 +3,7 @@ export const getHTML = ({
   username,
   dataInsc,
   local,
+    numeroInscricao,
   qrCode
 }) => `
   <html lang="pt-BR">
@@ -80,6 +81,7 @@ export const getHTML = ({
         <p><strong>Evento:</strong> ${eventname}</p>
         <p><strong>Data:</strong> ${dataInsc}</p>
         <p><strong>Local:</strong> ${local}</p>
+        <p><strong>Número de Inscrição:</strong> ${numeroInscricao}</p>
 
         <div class="qr-code">
             ${qrCode}

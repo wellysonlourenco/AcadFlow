@@ -140,6 +140,7 @@ export class InscricaoService {
             eventname: evento.nome,
             username: usuario.nome,
             local: evento.local,
+            numeroInscricao: numeroInscricao,
             qrCode: await this.qrCodeService.generateQrCode(numeroInscricao),
         });
 

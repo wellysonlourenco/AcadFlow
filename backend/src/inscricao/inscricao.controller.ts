@@ -1,4 +1,4 @@
-import { getPdf } from '@/certificado/template/getPdf';
+// import { getPdf } from '@/certificado/template/getPdf';
 import { PrismaService } from '@/prisma/prisma.service';
 import { QrCodeService } from '@/qr-code-generator/qr-code-generator.service';
 import { OrderParamSchema, orderValidationPipe, PageParamSchema, pageValidatioPipe, PerPageParamSchema, perPageValidationPipe } from '@/schema/page-param';
@@ -8,6 +8,7 @@ import { Response } from 'express';
 import { InscricaoDto } from './dto/inscricao.dto';
 import { InscricaoService } from './inscricao.service';
 import { getHTML } from './template/getHTML';
+import { getPdf } from './template/getPdf';
 
 
 @Controller('inscricao')
@@ -187,6 +188,7 @@ export class InscricaoController {
       eventname,
       username,
       local,
+      numeroInscricao,
       qrCode: await this.qrCodeService.generateQrCode(`${numeroInscricao}`),
     })
 

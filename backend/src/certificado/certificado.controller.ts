@@ -58,7 +58,7 @@ export class CertificadoController {
     if (!certificado) {
       throw new HttpException('Certificado não encontrado', HttpStatus.NOT_FOUND);
     }
-
+    console.log(certificado)
 
     const eventname = certificado.Inscricao?.Evento?.nome;
     const username = certificado.Inscricao?.Usuario?.nome;
@@ -67,7 +67,7 @@ export class CertificadoController {
     const qtdHours = certificado.Inscricao?.Evento?.quantidadeHoras;
     const createdAt = certificado.dataCadastro;
     const dtEnd = certificado.Inscricao?.Evento?.dataFim;
-    const url = `http://localhost:3333/certificates/${eventname}.png`
+    const url = `${process.env.APP_URL}/${certificado.url}`
 
     const html = getHTML({
       dtEnd: format(dtEnd ? new Date(dtEnd) : new Date(), 'dd/MM/yyyy'),
@@ -81,6 +81,7 @@ export class CertificadoController {
       url,
     })
 
+    console.log(url)
     const file = await getPdf(html)
 
     if (!file) {

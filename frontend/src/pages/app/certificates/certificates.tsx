@@ -65,8 +65,8 @@ export function Certificates() {
                                         <TableHead className="w-[180px]">Inscrição</TableHead>
                                         <TableHead className="w-[140px]">Carga Horária</TableHead>
                                         <TableHead className="w-[140px]">Emitido em</TableHead>
-                                        <TableHead className="w-[164px]"></TableHead>
-                                        <TableHead className="w-[132px]"></TableHead>
+                                        {/* <TableHead className="w-[164px]"></TableHead> */}
+                                        <TableHead className="w-[250px] text-end">Certificado de participação</TableHead>
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>

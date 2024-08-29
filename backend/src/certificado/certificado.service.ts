@@ -216,6 +216,7 @@ export class CertificadoService {
                 inscricaoId: inscricao.id,
                 dataCadastro: new Date(),
                 status: 'LIBERADO',
+                // url: 'certificado_a4.jpg',
             },
         });
 
