@@ -1,6 +1,6 @@
 import puppeteer from 'puppeteer'
 
-export async function getPdf(html: string) {
+export async function getPdf(html: string): Promise<Uint8Array> {
   const browser = await puppeteer.launch({ headless: true })
 
   const page = await browser.newPage()

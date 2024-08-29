@@ -120,7 +120,7 @@ export class InscricaoService {
     //     }
     // }
 
-    async sendEmailWithAttachment(id: number) {
+    async enviarComprovantePorEmail(id: number) {
         const inscricao = await this.prisma.inscricao.findUnique({
             where: { id },
             include: {
@@ -176,6 +176,7 @@ export class InscricaoService {
                 attachments: [
                     {
                         filename: 'comprovante.pdf',
+                        path: tempFilePath,
                         contentType: 'application/pdf',
                     },
                 ],

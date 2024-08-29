@@ -23,8 +23,13 @@ import { UsuarioModule } from './usuario/usuario.module';
       isGlobal: true,
     }),
     ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '..', '..', 'assets/uploads'),
+      rootPath: join(__dirname, '..', '..', 'assets/uploads'), 
+      // rootPath: join(process.cwd(), 'assets', 'uploads'),
       exclude: ['/api*'],
+      serveRoot: '/',
+      serveStaticOptions: {
+        index: false, // Desabilita a busca por index.html
+      },
     }),
     MailerModule.forRootAsync({
       imports: [ConfigModule],

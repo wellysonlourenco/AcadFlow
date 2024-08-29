@@ -27,6 +27,12 @@ export class CertificadoController {
     return { totalHoras };
   }
 
+  @Post('enviar-email/:id')
+  async enviarCertificadoPorEmail(@Param('id', ParseIntPipe) id: number) {
+    await this.certificadoService.enviarCertificadoPorEmail(id);
+    return { message: 'Certificado enviado por e-mail com sucesso.' };
+  }
+
   @Get(':inscricaoId')
   async generateCertificateFile(
     @Param('inscricaoId', ParseIntPipe) inscricaoId: number,
