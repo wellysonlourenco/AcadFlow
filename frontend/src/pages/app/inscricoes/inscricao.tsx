@@ -1,6 +1,6 @@
+import { Paginacao } from "@/components/paginacao";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
 import { Table, TableBody, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { AuthContext } from "@/context/AuthContext";
 import { api } from "@/lib/api";
@@ -40,9 +40,17 @@ export function Inscricoes() {
 
     function handlePageChange(page: number) {
         setSearchParams((params) => {
-            params.set('page', page.toString())
-            return params
-        })
+            params.set('page', page.toString());
+            return params;
+        });
+    }
+
+    function handleRowsPerPageChange(newRowsPerPage: number) {
+        setSearchParams((params) => {
+            params.set('itemsPerPage', newRowsPerPage.toString());
+            params.set('page', '1');
+            return params;
+        });
     }
 
     useEffect(() => {
@@ -129,32 +137,14 @@ export function Inscricoes() {
                                         </TableBody>
                                     </Table>
                                 </div>
-                                <Pagination className="mt-4">
-                                    <PaginationContent>
-                                        <PaginationItem>
-                                            <PaginationPrevious
-                                                onClick={() => handlePageChange(currentPage - 1)}
-                                                className={currentPage === 1 ? 'pointer-events-none opacity-50' : ''}
-                                            />
-                                        </PaginationItem>
-                                        {[...Array(totalPages)].map((_, i) => (
-                                            <PaginationItem key={i}>
-                                                <PaginationLink
-                                                    onClick={() => handlePageChange(i + 1)}
-                                                    isActive={currentPage === i + 1}
-                                                >
-                                                    {i + 1}
-                                                </PaginationLink>
-                                            </PaginationItem>
-                                        ))}
-                                        <PaginationItem>
-                                            <PaginationNext
-                                                onClick={() => handlePageChange(currentPage + 1)}
-                                                className={currentPage === totalPages ? 'pointer-events-none opacity-50' : ''}
-                                            />
-                                        </PaginationItem>
-                                    </PaginationContent>
-                                </Pagination>
+                                <Paginacao
+                                    totalPages={totalPages}
+                                    currentPage={currentPage}
+                                    setCurrentPage={handlePageChange}
+                                    rowsPerPage={itemsPerPage}
+                                    setRowsPerPage={handleRowsPerPageChange}
+                                    totalRows={inscricaoResponse?.countInscricaoByUser || 0}
+                                />
                             </CardContent>
                         </Card>
                     </div>

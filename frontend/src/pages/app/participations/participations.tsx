@@ -1,4 +1,3 @@
-import { Pagination } from "@/components/pagination";
 import { Table, TableBody, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Helmet } from "react-helmet-async";
 import { ParticipationTableFilters } from "./Participation-table-filters";
@@ -35,7 +34,6 @@ export function Participations() {
                         </Table>
                     </div>
 
-                    <Pagination pageIndex={0} totalCount={105} perPage={10} />
                 </div>
             </div>
         </>

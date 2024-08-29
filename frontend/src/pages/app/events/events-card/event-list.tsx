@@ -18,7 +18,7 @@ export function EventList({ evento }: EventListProps) {
             <img src={evento.imagem} alt={evento.nome} className="w-full h-40 object-cover" />
             <CardContent className="p-2">
                 <h3 className="font-bold text-lg mb-2">{evento.nome}</h3>
-                <p className="text-sm text-gray-600 mb-2">{evento.descricao}</p>
+                {/* <p className="text-sm text-gray-600 mb-2">{evento.descricao}</p> */}
                 <div className="flex items-center text-sm text-gray-600 mb-2">
                     <Calendar className="w-3 h-3 mr-1" />
                     <span>{formatDate(evento.dataInicio)} - {formatDate(evento.dataFim)}</span>
@@ -32,7 +32,7 @@ export function EventList({ evento }: EventListProps) {
                     <span>{evento.quantidadeHoras} horas</span>
                 </div>
             </CardContent>
-            <CardFooter className="p-2">
+            <CardFooter className="">
                 <Button className="w-full">Ver detalhes</Button>
             </CardFooter>
         </div>
