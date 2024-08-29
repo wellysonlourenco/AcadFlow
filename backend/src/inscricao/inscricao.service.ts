@@ -1,13 +1,18 @@
-import { CertificadoService } from '@/certificado/certificado.service';
 import { EventoService } from '@/evento/evento.service';
 import { PrismaService } from '@/prisma/prisma.service';
+import { QrCodeService } from '@/qr-code-generator/qr-code-generator.service';
 import { UsuarioService } from '@/usuario/usuario.service';
+import { MailerService } from '@nestjs-modules/mailer';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import * as crypto from "crypto";
-import { subDays } from 'date-fns';
+import { format, subDays } from 'date-fns';
+import * as fs from 'fs';
+import * as path from 'path';
 import * as PDFDocument from 'pdfkit';
 import { Stream } from 'stream';
 import { InscricaoDto } from './dto/inscricao.dto';
+import { getHTML } from './template/getHTML';
+import { getPdf } from './template/getPdf';
 
 @Injectable()
 export class InscricaoService {
@@ -15,7 +20,8 @@ export class InscricaoService {
         private readonly prisma: PrismaService,
         private readonly usuarioService: UsuarioService,
         private readonly eventoService: EventoService,
-        private readonly certificadoService: CertificadoService,
+        private readonly mailerService: MailerService,
+        private readonly qrCodeService: QrCodeService,
     ) { }
 
 
@@ -49,6 +55,144 @@ export class InscricaoService {
     }
 
 
+    // async sendEmailWithAttachment(id: number) {
+    //     const inscricao = await this.prisma.inscricao.findUnique({
+    //         where: { id },
+    //         include: {
+    //             Usuario: true,
+    //             Evento: true,
+    //         },
+    //     });
+
+    //     if (!inscricao) {
+    //         throw new HttpException('Inscrição não encontrada', HttpStatus.NOT_FOUND);
+    //     }
+
+    //     const { Evento: evento, Usuario: usuario, numeroInscricao, dataInsc } = inscricao;
+
+    //     const html = getHTML({
+    //         dataInsc: format(dataInsc ? new Date(dataInsc) : new Date(), 'dd/MM/yyyy'),
+    //         eventname: evento.nome,
+    //         username: usuario.nome,
+    //         local: evento.local,
+    //         qrCode: await this.qrCodeService.generateQrCode(numeroInscricao),
+    //     });
+
+    //     const pdfBuffer = await getPdf(html);
+
+    //     if (!pdfBuffer) {
+    //         throw new HttpException('Erro ao gerar PDF', HttpStatus.INTERNAL_SERVER_ERROR);
+    //     }
+
+    //     const tempDir = path.join(__dirname, '..', '..', 'tmp');
+    //     if (!fs.existsSync(tempDir)) {
+    //         fs.mkdirSync(tempDir, { recursive: true });
+    //     }
+
+    //     const tempFilePath = path.join(tempDir, `comprovante_${id}.pdf`);
+    //     fs.writeFileSync(tempFilePath, pdfBuffer);
+
+    //     try {
+    //         await this.mailerService.sendMail({
+    //             to: usuario.email,
+    //             subject: 'Comprovante de Inscrição',
+    //             template: 'comprovante',
+    //             context: {
+    //                 username: usuario.nome,
+    //                 eventname: evento.nome,
+    //             },
+    //             attachments: [
+    //                 {
+    //                     filename: 'comprovante.pdf',
+    //                     path: tempFilePath,
+    //                 },
+    //             ],
+    //         });
+
+    //         console.log('Email enviado com sucesso');
+    //     } catch (error) {
+    //         console.error('Erro ao enviar email:', error);
+    //         throw new HttpException('Erro ao enviar email', HttpStatus.INTERNAL_SERVER_ERROR);
+    //     } finally {
+    //         console.log(`Arquivo temporário deletado: ${tempFilePath}`);
+    //         // Deletar o arquivo temporário
+    //         //fs.unlinkSync(tempFilePath);
+    //     }
+    // }
+
+    async sendEmailWithAttachment(id: number) {
+        const inscricao = await this.prisma.inscricao.findUnique({
+            where: { id },
+            include: {
+                Usuario: true,
+                Evento: true,
+            },
+        });
+
+        if (!inscricao) {
+            throw new HttpException('Inscrição não encontrada', HttpStatus.NOT_FOUND);
+        }
+
+        const { Evento: evento, Usuario: usuario, numeroInscricao, dataInsc } = inscricao;
+
+        const html = await getHTML({
+            dataInsc: format(dataInsc ? new Date(dataInsc) : new Date(), 'dd/MM/yyyy'),
+            eventname: evento.nome,
+            username: usuario.nome,
+            local: evento.local,
+            qrCode: await this.qrCodeService.generateQrCode(numeroInscricao),
+        });
+
+        const pdfBuffer = await getPdf(html);
+
+        if (!pdfBuffer) {
+            throw new HttpException('Erro ao gerar PDF', HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+
+        const tempDir = path.join(__dirname, '..', '..', '..', 'tmp');
+        if (!fs.existsSync(tempDir)) {
+            fs.mkdirSync(tempDir, { recursive: true });
+        }
+
+        const tempFilePath = path.join(tempDir, `comprovante_${id}.pdf`);
+        try {
+            fs.writeFileSync(tempFilePath, pdfBuffer);
+            console.log(`PDF salvo em: ${tempFilePath}`);
+        } catch (error) {
+            console.error('Erro ao salvar PDF:', error);
+            throw new HttpException('Erro ao salvar PDF', HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        try {
+            await this.mailerService.sendMail({
+                to: usuario.email,
+                subject: 'Comprovante de Inscrição',
+                template: 'comprovante',
+                context: {
+                    username: usuario.nome,
+                    eventname: evento.nome,
+                },
+                attachments: [
+                    {
+                        filename: 'comprovante.pdf',
+                        contentType: 'application/pdf',
+                    },
+                ],
+            });
+
+            console.log('Email enviado com sucesso');
+        } catch (error) {
+            console.error('Erro ao enviar email:', error);
+            throw new HttpException('Erro ao enviar email', HttpStatus.INTERNAL_SERVER_ERROR);
+        } finally {
+            // Deletar o arquivo temporário
+            console.log(`Arquivo temporário deletado: ${tempFilePath}`);
+            if (fs.existsSync(tempFilePath)) {
+                fs.unlinkSync(tempFilePath);
+            }
+        }
+    }
 
     //Total de inscrições de todos os usuários nos últimos 30 dias
     async countRecentInscricoes(): Promise<number> {

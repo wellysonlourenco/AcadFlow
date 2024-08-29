@@ -142,6 +142,12 @@ export class InscricaoController {
     return certificados
   }
 
+  @Post('enviar-email/:id')
+  async sendCertificateEmail(@Param('id', ParseIntPipe) id: number) {
+    await this.inscricaoService.sendEmailWithAttachment(id);
+    return { message: 'E-mail com o comprovante enviado com sucesso!' };
+  }
+
 
   @Get(':id')
   async generateCertificateFile(
