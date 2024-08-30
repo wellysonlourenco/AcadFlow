@@ -1,21 +1,33 @@
-import puppeteer from 'puppeteer'
+import puppeteer from 'puppeteer';
 
 export async function getPdf(html: string): Promise<Uint8Array> {
-  const browser = await puppeteer.launch({ headless: true })
 
-  const page = await browser.newPage()
+  console.log('Iniciando geração de PDF...');
 
-  await page.setContent(html, { waitUntil: 'networkidle0' })
-
-  await page.emulateMediaType('screen')
-
-  const file = await page.pdf({
-    format: 'A4',
-    landscape: true,
-    printBackground: true,
+  const browser = await puppeteer.launch({
+    headless: true,
+    args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-gpu'],
+    defaultViewport: null
   })
+  console.log('Navegador iniciado');
 
-  await browser.close()
+  try {
+    const page = await browser.newPage()
 
-  return file
+    await page.setContent(html, { waitUntil: 'networkidle0' })
+
+    await page.emulateMediaType('screen')
+
+    const file = await page.pdf({
+      format: 'A4',
+      landscape: true,
+      printBackground: true,
+    })
+
+    return file
+  } finally {
+    console.log('PDF gerado com sucesso');
+
+    await browser.close()
+  }
 }
