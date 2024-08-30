@@ -1,9 +1,9 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { API_URL } from "@/lib/api";
 import { PieChart } from "lucide-react";
+import { useEffect, useState } from 'react';
 import { Cell, Pie, PieChart as RechartsPieChart, ResponsiveContainer } from 'recharts';
 import colors from "tailwindcss/colors";
-import { useEffect, useState } from 'react';
-import { API_URL } from "@/lib/api";
 
 // Definindo o tipo para os dados da API
 type CategoriaEvento = {
@@ -22,7 +22,7 @@ const COLORS = [
     colors.rose[500],
 ];
 
-export function CategoriaEventosChart() {
+export function CategoriaEventosPizzaChart() {
     const [data, setData] = useState<CategoriaEvento[]>([]);
 
     useEffect(() => {
@@ -41,10 +41,16 @@ export function CategoriaEventosChart() {
     }, []);
 
     // Transformando os dados para o formato esperado pelo gráfico
-    const chartData = data.map(item => ({
+    const chartData = data
+        .map(item => ({
         descricao: item.descricao,
         quantidade: item._count.Evento
-    }));
+        }))
+        .filter(item => item.quantidade > 0); // Filtrando valores maiores que 0
+
+    // Calculando o total de eventos
+    const totalEventos = chartData.reduce((total, item) => total + item.quantidade, 0);
+
 
     return (
         <Card className="col-span-3">
@@ -76,10 +82,13 @@ export function CategoriaEventosChart() {
                                 value,
                                 index,
                             }) => {
-                                const RADIAN = Math.PI / 180
-                                const radius = 12 + innerRadius + (outerRadius - innerRadius)
-                                const x = cx + radius * Math.cos(-midAngle * RADIAN)
-                                const y = cy + radius * Math.sin(-midAngle * RADIAN)
+                                const RADIAN = Math.PI / 180;
+                                const radius = 12 + innerRadius + (outerRadius - innerRadius);
+                                const x = cx + radius * Math.cos(-midAngle * RADIAN);
+                                const y = cy + radius * Math.sin(-midAngle * RADIAN);
+
+                                // Calculando a porcentagem
+                                const percent = ((value / totalEventos) * 100).toFixed(1);
 
                                 return (
                                     <text
@@ -92,7 +101,7 @@ export function CategoriaEventosChart() {
                                         {chartData[index].descricao.length > 1
                                             ? chartData[index].descricao.substring(0, 12).concat('...')
                                             : chartData[index].descricao}{' '}
-                                        ({value})
+                                        ({percent}%)
                                     </text>
                                 )
                             }}
