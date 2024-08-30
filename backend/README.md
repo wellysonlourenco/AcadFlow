@@ -11,6 +11,13 @@
 $ npm i
 ```
 
+Precisa criar o arquivo no diretorio raiz => .env
+
+```bash
+DATABASE_URL="postgresql://postgres:postgres@127.0.0.1:5432/mydb?schema=development"
+```
+
+*instalar o docker :
 
 
 ### Docker 
