@@ -1,5 +1,5 @@
 import { AuthContext } from "@/context/AuthContext";
-import { Calendar, GraduationCap, Home, QrCode, Tags } from "lucide-react";
+import { Calendar, CircleCheck, FileText, GraduationCap, Home, QrCode, Tags } from "lucide-react";
 import { useContext } from "react";
 import { AccountMenu } from "./account-menu";
 import { NavLink } from "./nav-link";
@@ -24,6 +24,11 @@ export function Header() {
                     <NavLink to="/events">
                         <Calendar className="h-4 w-4" /> Eventos
                     </NavLink>
+                    {user && user.perfil === 'ADMIN' && (
+                        <NavLink to="/categories">
+                            <Tags className="h-4 w-4" /> Categoria
+                        </NavLink>
+                    )}
                     <NavLink to="/inscricoes">
                         <QrCode className="h-4 w-4" /> Inscrições
                     </NavLink>
@@ -31,8 +36,13 @@ export function Header() {
                         <GraduationCap className="h-4 w-4" /> Certificado
                     </NavLink>
                     {user && user.perfil === 'ADMIN' && (
-                        <NavLink to="/categories">
-                            <Tags className="h-4 w-4" /> Categoria
+                        <NavLink to="/validate-presence">
+                            <CircleCheck className="h-4 w-4" /> Validar Presença
+                        </NavLink>
+                    )}
+                    {user && user.perfil === 'ADMIN' && (
+                        <NavLink to="/validate-presence">
+                            <FileText className="h-4 w-4" /> Relatórios
                         </NavLink>
                     )}
                 </nav>
