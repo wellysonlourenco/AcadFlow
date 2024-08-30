@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { api } from "@/lib/api";
@@ -13,7 +14,7 @@ import { z } from "zod";
 
 
 const formSchema = z.object({
-    numeroInscricao: z.string()
+    numeroInscricao: z.string().nonempty(),
 })
 
 type PresenceFormValue = z.infer<typeof formSchema>;
@@ -24,9 +25,21 @@ export function ValidatePresence() {
     // const [message, setMessage] = useState('');
 
 
-    const { register, handleSubmit, reset, formState: { isSubmitting, errors } } = useForm<PresenceFormValue>({
+
+    const form = useForm({
         resolver: zodResolver(formSchema),
-    });
+        mode: 'onChange',
+        defaultValues: {
+            numeroInscricao: "",
+        }
+    })
+
+    const { register, handleSubmit, setError, reset, formState: { isSubmitting, errors } } = form;
+
+    // const { register, handleSubmit, reset, formState: { isSubmitting, errors } } = useForm<PresenceFormValue>({
+    //     resolver: zodResolver(formSchema),
+
+    // });
 
 
 
@@ -39,6 +52,7 @@ export function ValidatePresence() {
         onSuccess: (response) => {
             toast.success('Presença validada! Certificado liberado.', { duration: 1000 })
             queryClient.invalidateQueries({ queryKey: ['certificado'] })
+            form.reset()
         },
         onError: (error) => {
             toast.error('Número de inscrição inválido.', { duration: 1500 })
@@ -55,25 +69,26 @@ export function ValidatePresence() {
 
 
     return (
-        <div className="max-w-md mx-auto mt-10 p-6 bg-white shadow-md rounded-md">
-            <h1 className="text-2xl font-bold mb-6">Validar Presença</h1>
+        <Card className=" mx-auto w-[450px] mt-20 p-6  max-w-sm">
+            <CardHeader>
+                <CardTitle className="text-2xl font-bold mb-6">Validar Presença</CardTitle>
+            </CardHeader>
+            <CardContent className="grid gap-4">
+                <form onSubmit={handleSubmit(onSubmit)}>
 
-            <form onSubmit={handleSubmit(onSubmit)}>
-                <Label htmlFor="numeroInscricao" className="block mb-2 text-sm font-medium text-gray-700">
-                    Número de Inscrição
-                </Label>
-                <Input
-                    id="numeroInscricao"
-                    type="text"
-                    placeholder="Digite o número de inscrição"
-                    {...register('numeroInscricao')}
-                    className="mb-4"
-                />
-
-                <Button type="submit" className="w-full" disabled={isSubmitting}>
-                    {errors.numeroInscricao ? (
-                        'Submit'
-                    ) : (
+                    <div className="grid gap-2 mb-7">
+                        <Label htmlFor="numeroInscricao" className="block mb-2 text-sm font-medium text-foreground">
+                            Número de Inscrição
+                        </Label>
+                        <Input
+                            id="numeroInscricao"
+                            type="text"
+                            placeholder="Digite o número de inscrição"
+                            {...register('numeroInscricao')}
+                            className={'' + (errors.numeroInscricao ? 'border-red-500' : '')}
+                        />{errors.numeroInscricao && <span className="text-red-500 text-sm">Campo Obrigatório!</span>}
+                    </div>
+                    <Button type="submit" className=" w-full" disabled={isSubmitting}>
                         <AnimatePresence mode="wait" initial={false}>
                             <motion.span
                                 key={isSubmitting ? 'Salvando' : 'Salvar'}
@@ -85,11 +100,10 @@ export function ValidatePresence() {
                                 {isSubmitting ? 'Validando Presença...' : 'Validar Presença'}
                             </motion.span>
                         </AnimatePresence>
-                    )}
-                    {isSubmitting && <Loader2 className="h-6 w-6 ml-2 animate-spin" />}
-                </Button>
-
-            </form>
-        </div>
+                        {isSubmitting && <Loader2 className="h-6 w-6 ml-2 animate-spin" />}
+                    </Button>
+                </form>
+            </CardContent>
+        </Card>
     );
 }

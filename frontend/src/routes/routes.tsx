@@ -10,9 +10,9 @@ import { createBrowserRouter, Outlet } from "react-router-dom";
 import { AppLayout } from "@/pages/app/_layouts/app";
 import { AuthLayout } from "@/pages/app/_layouts/auth";
 import { UserProfile } from "@/pages/app/account/profile";
+import { Dashboard } from "@/pages/app/dashboard/dashboard";
 import { EventCard } from "@/pages/app/events/events-card/event-card";
 import { ValidatePresence } from "@/pages/app/presence/validate-presence";
-import { Dashboard } from "../pages/app/dashboard/dashboards";
 import { Orders } from "../pages/app/orders/orders";
 import { SignIn } from "../pages/auth/sing-in";
 import { SignUp } from "../pages/auth/sing-up";
@@ -23,7 +23,6 @@ const AuthProviderWrapper = () => (
     <Outlet />
   </AuthProvider>
 );
-
 
 export const router = createBrowserRouter([
   {
@@ -39,14 +38,12 @@ export const router = createBrowserRouter([
               { path: "/orders", element: <Orders /> },
               { path: "/events", element: <Events /> },
               { path: "/events-card", element: <EventCard /> },
-
               {
                 element: <ProtectedRoute allowedRoles={['ADMIN']} />,
                 children: [
                   { path: "/categories", element: <Categoria /> },
                   { path: "/events-create", element: <CreateFormEvents /> },
                   { path: "/validate-presence", element: <ValidatePresence /> },
-
                 ]
               },
               { path: "/participations", element: <Participations /> },

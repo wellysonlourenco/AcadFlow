@@ -2,16 +2,15 @@ import { AuthContext } from '@/context/AuthContext';
 import { useContext } from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
 
-
 interface ProtectedRouteProps {
   allowedRoles?: ('ADMIN' | 'USER')[];
+  children?: React.ReactNode;
 }
 
+export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ allowedRoles, children }) => {
+  const { isAuth, user, isInitialized, isLoading } = useContext(AuthContext);
 
-export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ allowedRoles }) => {
-  const { isAuth, user, isInitialized } = useContext(AuthContext);
-
-  if (!isInitialized) {
+  if (!isInitialized || isLoading) {
     return <div>Carregando...</div>;
   }
 
@@ -23,5 +22,5 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ allowedRoles }) 
     return <Navigate to="/" replace />;
   }
 
-  return <Outlet />;
+  return children ? <>{children}</> : <Outlet />;
 };
