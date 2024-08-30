@@ -15,7 +15,7 @@ export function EventList({ evento }: EventListProps) {
 
     return (
         <div className="flex flex-col h-full">
-            <img src={evento.imagem} alt={evento.nome} className="w-full h-40 object-cover" />
+            <img src={evento.imagem ? evento.imagem : "events.png"} alt={evento.nome} className="w-full h-40 object-cover" />
             <CardContent className="p-2">
                 <h3 className="font-bold text-lg mb-2">{evento.nome}</h3>
                 {/* <p className="text-sm text-gray-600 mb-2">{evento.descricao}</p> */}

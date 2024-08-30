@@ -4,7 +4,7 @@ import { TableCell, TableRow } from "@/components/ui/table";
 import { AuthContext } from "@/context/AuthContext";
 import { api } from "@/lib/api";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { ArrowRight, Check, Navigation } from "lucide-react";
+import { ArrowRight, Check, Navigation, X } from "lucide-react";
 import { useContext, useState } from "react";
 import { toast } from "sonner";
 import { Categoria } from "./interface/events-response";
@@ -42,6 +42,7 @@ export function EventTableRow({ eventos, columnVisibility }: EventTableRowProps)
     const { user } = useContext(AuthContext);
     const queryClient = useQueryClient();
 
+    const isEventoAtivo = eventos.status === "ATIVO";
 
     //verifica se o usuário está inscrito no evento
     const { data: isInscrito, refetch: refetchInscricaoStatus } = useQuery({
@@ -51,7 +52,7 @@ export function EventTableRow({ eventos, columnVisibility }: EventTableRowProps)
             const response = await api.get(`/inscricao/evento/${eventos.id}/usuario/${user.id}`);
             return response.data;
         },
-        enabled: !!user?.id,
+        enabled: !!user?.id && isEventoAtivo,
     });
 
 
@@ -130,36 +131,45 @@ export function EventTableRow({ eventos, columnVisibility }: EventTableRowProps)
                 </TableCell>
             )}
             <TableCell>
-                {isInscrito ? (
-                    <Button variant="ghost" size="sm" disabled>
-                        <Check className="mr-2 h-4 w-4" />
-                        <span className="hidden sm:inline">Inscrição realizada</span>
-                        <span className="sm:hidden">Inscrito</span>
-                    </Button>
-                ) : (
-                    <Dialog open={open} onOpenChange={setOpen}>
-                        <DialogTrigger asChild>
-                            <Button variant="ghost" size="sm">
-                                <ArrowRight className="mr-2 h-4 w-4" />
-                                <span className="hidden sm:inline">Fazer Inscrição</span>
-                                <span className="sm:hidden">Inscrever</span>
-                            </Button>
-                        </DialogTrigger>
-                        <DialogContent>
-                            <DialogHeader>
-                                <DialogTitle>Confirmar Inscrição</DialogTitle>
-                                <DialogDescription>
-                                    Você está prestes a se inscrever no evento "{eventos.nome}". Deseja continuar?
-                                </DialogDescription>
-                            </DialogHeader>
-                            <DialogFooter>
-                                <Button variant="outline" onClick={() => setOpen(false)}>Cancelar</Button>
-                                <Button onClick={handleInscricao} disabled={inscricaoMutation.isPending}>
-                                    {inscricaoMutation.isPending ? 'Inscrevendo...' : 'Confirmar Inscrição'}
+                {isEventoAtivo ? (
+                    isInscrito ? (
+                        <Button variant="ghost" size="sm" disabled>
+                            <Check className="mr-2 h-4 w-4" />
+                            <span className="hidden sm:inline">Inscrição realizada</span>
+                            <span className="sm:hidden">Inscrito</span>
+                        </Button>
+                    ) : (
+                        <Dialog open={open} onOpenChange={setOpen}>
+                            <DialogTrigger asChild>
+                                <Button variant="ghost" size="sm">
+                                    <ArrowRight className="mr-2 h-4 w-4" />
+                                    <span className="hidden sm:inline">Fazer Inscrição</span>
+                                    <span className="sm:hidden">Inscrever</span>
                                 </Button>
-                            </DialogFooter>
-                        </DialogContent>
-                    </Dialog>
+                            </DialogTrigger>
+                            <DialogContent>
+                                <DialogHeader>
+                                    <DialogTitle>Confirmar Inscrição</DialogTitle>
+                                    <DialogDescription>
+                                        Você está prestes a se inscrever no evento "{eventos.nome}". Deseja continuar?
+                                    </DialogDescription>
+                                </DialogHeader>
+                                <DialogFooter>
+                                    <Button variant="outline" onClick={() => setOpen(false)}>Cancelar</Button>
+                                    <Button onClick={handleInscricao} disabled={inscricaoMutation.isPending}>
+                                        {inscricaoMutation.isPending ? 'Inscrevendo...' : 'Confirmar Inscrição'}
+                                    </Button>
+                                </DialogFooter>
+                            </DialogContent>
+                        </Dialog>
+                    )
+                ) : (
+                    <Button variant="ghost" size="sm" disabled>
+                         <X className=" mr-2 h-4 w-4 text-red-500" />
+                        <span className="hidden sm:inline">
+                            Inscrições encerradas</span>
+                        <span className="sm:hidden">Encerrado</span>
+                    </Button>
                 )}
             </TableCell>
         </TableRow>

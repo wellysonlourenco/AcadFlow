@@ -13,7 +13,7 @@ import { z } from "zod";
 
 
 const formSchema = z.object({
-    inscricaoId: z.string()
+    numeroInscricao: z.string()
 })
 
 type PresenceFormValue = z.infer<typeof formSchema>;
@@ -59,19 +59,19 @@ export function ValidatePresence() {
             <h1 className="text-2xl font-bold mb-6">Validar Presença</h1>
 
             <form onSubmit={handleSubmit(onSubmit)}>
-                <Label htmlFor="inscription-number" className="block mb-2 text-sm font-medium text-gray-700">
+                <Label htmlFor="numeroInscricao" className="block mb-2 text-sm font-medium text-gray-700">
                     Número de Inscrição
                 </Label>
                 <Input
-                    id="inscription-number"
+                    id="numeroInscricao"
                     type="text"
                     placeholder="Digite o número de inscrição"
-                    {...register('inscricaoId')}
+                    {...register('numeroInscricao')}
                     className="mb-4"
                 />
 
                 <Button type="submit" className="w-full" disabled={isSubmitting}>
-                    {errors.inscricaoId ? (
+                    {errors.numeroInscricao ? (
                         'Submit'
                     ) : (
                         <AnimatePresence mode="wait" initial={false}>
