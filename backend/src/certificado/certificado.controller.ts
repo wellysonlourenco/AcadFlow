@@ -33,6 +33,20 @@ export class CertificadoController {
     return { message: 'Certificado enviado por e-mail com sucesso.' };
   }
 
+  @Get('usuario/:id/carga-horaria')
+  async getTotalCargaHorariaUsuario(@Param('id') id: string) {
+    const usuarioId = parseInt(id, 10);
+    const totalHoras = await this.certificadoService.getTotalCargaHorariaByUsuario(usuarioId);
+    return { usuarioId, totalHoras };
+  }
+
+  @Get('usuario/:id/carga-horaria-mensal')
+  async getCargaHorariaMensal(@Param('id') id: string) {
+    const usuarioId = parseInt(id, 10);
+    const cargaHorariaMensal = await this.certificadoService.getCargaHorariaMensalByUsuario(usuarioId);
+    return { usuarioId, cargaHorariaMensal };
+  }
+
   @Get(':inscricaoId')
   async generateCertificateFile(
     @Param('inscricaoId', ParseIntPipe) inscricaoId: number,

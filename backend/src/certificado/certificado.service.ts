@@ -3,7 +3,7 @@ import { QrCodeService } from '@/qr-code-generator/qr-code-generator.service';
 import { MailerService } from '@nestjs-modules/mailer';
 import { HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { format } from 'date-fns';
+import { endOfMonth, format, startOfMonth, subMonths } from 'date-fns';
 import * as fs from 'fs';
 import * as path from 'path';
 import { getHTML } from './template/getHTML';
@@ -18,7 +18,71 @@ export class CertificadoService {
         private readonly qrCodeService: QrCodeService,
     ) { }
 
+    async getTotalCargaHorariaByUsuario(usuarioId: number): Promise<number> {
+        const certificados = await this.prisma.certificado.findMany({
+            where: {
+                status: 'LIBERADO',
+                Inscricao: {
+                    usuarioId: usuarioId,
+                },
+            },
+            include: {
+                Inscricao: {
+                    include: {
+                        Evento: true,
+                    },
+                },
+            },
+        });
 
+        const totalHoras = certificados.reduce((total, certificado) => {
+            return total + certificado.Inscricao.Evento.quantidadeHoras;
+        }, 0);
+
+        return totalHoras;
+    }
+
+    async getCargaHorariaMensalByUsuario(usuarioId: number) {
+        const today = new Date();
+        const results = [];
+
+        for (let i = 0; i < 6; i++) {
+            const startDate = startOfMonth(subMonths(today, i));
+            const endDate = endOfMonth(subMonths(today, i));
+
+            const certificados = await this.prisma.certificado.findMany({
+                where: {
+                    status: 'LIBERADO',
+                    dataCadastro: {
+                        gte: startDate,
+                        lte: endDate,
+                    },
+                    Inscricao: {
+                        usuarioId: usuarioId,
+                    },
+                },
+                include: {
+                    Inscricao: {
+                        include: {
+                            Evento: true,
+                        },
+                    },
+                },
+            });
+
+            const totalHoras = certificados.reduce((total, certificado) => {
+                return total + certificado.Inscricao.Evento.quantidadeHoras;
+            }, 0);
+
+            results.push({
+                // mes: startDate.toLocaleString('default', { month: 'long', year: 'numeric' }),
+                mes: format(startDate, 'MM/yyyy'),
+                totalHoras,
+            });
+        }
+
+        return results.reverse(); // Ordena os meses do mais antigo para o mais recente
+    }
 
 
     async enviarCertificadoPorEmail(inscricaoId: number) {
