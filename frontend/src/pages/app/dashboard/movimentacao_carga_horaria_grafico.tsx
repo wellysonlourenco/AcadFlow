@@ -112,7 +112,7 @@ export function MovimentacaoCargaHorariaGrafico() {
 
                         <Legend onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave} />
 
-                        <Tooltip content={<CustomTooltip />} />
+                        <Tooltip cursor={false} content={<CustomTooltip />} />
 
                         <Line
                             type="bumpX"
