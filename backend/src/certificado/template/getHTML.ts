@@ -19,15 +19,15 @@ export const getHTML = ({
 
     <style>
       body {
-        margin: 0;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-family: 'Montserrat', sans-serif;
-        background-image: url('${url}');
-        background-position: center;
-        background-repeat: no-repeat;
-        background-size: contain;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Montserrat', sans-serif;
+      background-image: url('https://cdn.awsli.com.br/2500x2500/122/122167/produto/34981091/certificados-borda-dourada-_designexpresss_modelo-03-eyh42q769g.jpg');
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: cover; /* Ajustado para cobrir o fundo */
       }
 
       h1, span, p {
@@ -57,9 +57,9 @@ export const getHTML = ({
 
       footer {
         position: fixed;
-        bottom: 40px;
+        bottom: 87px;
         text-align: center;
-        margin-left: 10%;
+        margin-left: 14%;
         width: 100%;
         color: #313131;
         font-size: 8px;
@@ -67,7 +67,8 @@ export const getHTML = ({
     </style>
   </head>
   <body>
-    <div>
+  <div>
+  <h1 style="font-size: 48px; margin-button:20px; color: #313131; text-align: center;"> Certificado</h1>
       <p class="texto">
         Certificamos que <strong>${username}</strong> participou do evento
         <strong>${eventname}</strong> que aconteceu no período de
