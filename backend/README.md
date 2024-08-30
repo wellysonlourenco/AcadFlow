@@ -13,18 +13,6 @@ $ npm i
 
 
 
-
-
-### PostgresSql: 
-```bash
-create table db : development
-```
-
-
-
-
-
-
 ### Docker 
 ```bash
 docker-compose up -d
