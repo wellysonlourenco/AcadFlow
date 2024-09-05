@@ -148,6 +148,56 @@ export class InscricaoService {
     //     }
     // }
 
+    async generateInscricoesPdf(eventoId: number): Promise<Stream> {
+        // Fetch the event
+        const evento = await this.prisma.evento.findUnique({
+          where: { id: eventoId },
+        });
+    
+        if (!evento) {
+          throw new Error('Evento não encontrado');
+        }
+    
+        // Fetch inscriptions for the event
+        const inscricoes = await this.prisma.inscricao.findMany({
+          where: { eventoId: eventoId },
+          include: {
+            Usuario: true,
+          },
+          orderBy: {
+            Usuario: {
+              nome: 'asc',
+            },
+          },
+        });
+    
+        // Create a new PDF document
+        const doc = new PDFDocument();
+        const stream = new Stream.PassThrough();
+        doc.pipe(stream);
+    
+        // Add the title
+        doc.fontSize(18).text('Lista de Inscrições', { align: 'center' });
+        doc.moveDown();
+    
+        // Add the event name
+        doc.fontSize(14).text(`Evento: ${evento.nome}`, { align: 'center' });
+        doc.moveDown();
+    
+        // Add the list of inscriptions
+        inscricoes.forEach((inscricao, index) => {
+          doc.fontSize(12).text(`${index + 1}. Nome: ${inscricao.Usuario.nome}`);
+          doc.fontSize(10).text(`   Número de Inscrição: ${inscricao.numeroInscricao}`);
+          doc.fontSize(10).text(`   Email: ${inscricao.Usuario.email}`);
+          doc.moveDown();
+        });
+    
+        // Finalize the PDF and end the stream
+        doc.end();
+    
+        return stream;
+      }
+
     async enviarComprovantePorEmail(id: number) {
         const inscricao = await this.prisma.inscricao.findUnique({
             where: { id },
