@@ -64,6 +64,11 @@ export class EventoController {
     return { count };
   }
 
+  @Get('user-events-report')
+  async getUserEventsReport(): Promise<any> {
+    return this.eventoService.getUserEventsReport();
+  }
+
   @Get('count-ativo')
   async getActiveEventCount(): Promise<{ count: number }> {
     const count = await this.eventoService.countActiveEvents();

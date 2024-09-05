@@ -41,7 +41,11 @@ export class InscricaoController {
     return { count };
   }
 
-
+ // Pesquisa de inscrições por mês no intervalo de 6 meses
+ @Get('inscriptions')
+ async getTotalInscriptionsReport() {
+   return await this.inscricaoService.getTotalInscriptionsReport();
+ }
 
   // @Get('evento/:id')
   // async findInscricaoByEventoId(

@@ -1,7 +1,7 @@
 import { PrismaService } from '@/prisma/prisma.service';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { Status } from '@prisma/client';
-import { subDays } from 'date-fns';
+import { endOfMonth, startOfMonth, subDays, subMonths } from 'date-fns';
 import * as fs from 'fs/promises';
 import { EventoDto } from './dto/evento.dto';
 
@@ -49,6 +49,34 @@ export class EventoService {
             }
         })
     }
+
+    // Pesquisa de eventos cadastrados por mês no intervalo de 6 meses
+  async getUserEventsReport() {
+    const now = new Date();
+    const results = [];
+
+    for (let i = 5; i >= 0; i--) {
+      const startDate = startOfMonth(subMonths(now, i));
+      const endDate = endOfMonth(subMonths(now, i));
+
+      const eventCount = await this.prisma.evento.count({
+        where: {
+          dataCadastro: {
+            gte: startDate,
+            lte: endDate,
+          },
+        },
+      });
+
+      results.push({
+        month: startDate.toLocaleString('default', { month: 'long', year: 'numeric' }),
+        eventCount,
+      });
+    }
+
+    const totalEvents = results.reduce((acc, item) => acc + item.eventCount, 0);
+    return { monthlyData: results, totalEvents };
+  }
 
 
     //Total de eventos cadastrados nos últimos 30 dias 

@@ -5,7 +5,7 @@ import { UsuarioService } from '@/usuario/usuario.service';
 import { MailerService } from '@nestjs-modules/mailer';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import * as crypto from "crypto";
-import { format, subDays } from 'date-fns';
+import { endOfMonth, format, startOfMonth, subDays, subMonths } from 'date-fns';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as PDFDocument from 'pdfkit';
@@ -53,6 +53,34 @@ export class InscricaoService {
             throw new HttpException('Erro ao criar inscrição', HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+     // Pesquisa de inscrições por mês no intervalo de 6 meses
+  async getTotalInscriptionsReport() {
+    const now = new Date();
+    const results = [];
+
+    for (let i = 5; i >= 0; i--) {
+      const startDate = startOfMonth(subMonths(now, i));
+      const endDate = endOfMonth(subMonths(now, i));
+
+      const inscriptionCount = await this.prisma.inscricao.count({
+        where: {
+          dataInsc: {
+            gte: startDate,
+            lte: endDate,
+          },
+        },
+      });
+
+      results.push({
+        month: startDate.toLocaleString('default', { month: 'long', year: 'numeric' }),
+        inscriptionCount,
+      });
+    }
+
+    const totalInscriptions = results.reduce((acc, item) => acc + item.inscriptionCount, 0);
+    return { monthlyData: results, totalInscriptions };
+  }
 
 
     // async sendEmailWithAttachment(id: number) {
