@@ -12,13 +12,24 @@ export class UsuarioController {
   usersService: any;
   constructor(private readonly usuarioService: UsuarioService) {}
   
-  
+    @Get('count')
+    async countUsers() {
+        const total =  await this.usuarioService.userCount();
+        return { total: total}
+    }
   
     @Get('me/:id')
     async getUserById(
         @Param('id', ParseIntPipe) id: number,
     ) {
         return await this.usuarioService.getUserById(id);
+    }
+
+    @Get(':email')
+    async getUserEmail(
+        @Param('email') email: string,
+    ) {
+        return await this.usuarioService.findEmails(email);
     }
 
 
@@ -75,6 +86,16 @@ export class UsuarioController {
         const user = await this.usuarioService.uploadAvatar(id, avatar);
         return user
     }
+
+    @Patch('perfil/:id')
+    async RoleUserUpdate (
+        @Param('id', ParseIntPipe) id: number,
+        @Body('perfil') perfil: Perfil,
+    ) {
+        const user = await this.usuarioService.updateRoleUser(id, perfil);
+        return user
+    }
+    
 
 
     

@@ -8,6 +8,16 @@ export class UsuarioService {
     constructor(private readonly prisma: PrismaService) { }
 
 
+    async findEmails(email: string) {
+        const user = await this.prisma.usuario.findUnique({
+            where: {
+                email
+            }
+        });
+
+        return user;
+    }
+
     async findOneByEmail(email: string) {
         return this.prisma.usuario.findFirst({
             where: { email },
@@ -102,6 +112,19 @@ export class UsuarioService {
     }
 
     async updatePerfil(id: number, perfil: Perfil) {
+        await this.exists(id);
+
+        return await this.prisma.usuario.update({
+            where: {
+                id
+            },
+            data: {
+                perfil
+            }
+        })
+    }
+
+    async updateRoleUser(id: number, perfil: Perfil) {
         await this.exists(id);
 
         return await this.prisma.usuario.update({

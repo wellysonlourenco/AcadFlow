@@ -51,7 +51,7 @@ export class EventoService {
     }
 
     // Pesquisa de eventos cadastrados por mês no intervalo de 6 meses
-  async getUserEventsReport() {
+  async getEventsReport() {
     const now = new Date();
     const results = [];
 

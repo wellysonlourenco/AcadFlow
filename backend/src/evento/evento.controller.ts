@@ -64,9 +64,9 @@ export class EventoController {
     return { count };
   }
 
-  @Get('user-events-report')
+  @Get('events-report')
   async getUserEventsReport(): Promise<any> {
-    return this.eventoService.getUserEventsReport();
+    return this.eventoService.getEventsReport();
   }
 
   @Get('count-ativo')
