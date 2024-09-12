@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { TableCell, TableRow } from "@/components/ui/table";
-import { api } from "@/lib/api";
+import { api } from "@/services/api";
 import { motion } from 'framer-motion';
 import { Mail, Printer } from "lucide-react";
 import { useState } from "react";

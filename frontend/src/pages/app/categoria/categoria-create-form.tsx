@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Textarea } from '@/components/ui/textarea';
-import { api } from '@/lib/api';
+import { api } from '@/services/api';
 import { cn } from '@/lib/utils';
 import { queryClient } from '@/services/query-client';
 import { zodResolver } from "@hookform/resolvers/zod";

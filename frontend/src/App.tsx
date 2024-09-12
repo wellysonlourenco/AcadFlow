@@ -18,7 +18,7 @@ export function App() {
         <Toaster richColors />
         <QueryClientProvider client={queryClient}>
           <RouterProvider router={router} />
-          <ReactQueryDevtools initialIsOpen={false} />
+          {/* <ReactQueryDevtools initialIsOpen={false} /> */}
         </QueryClientProvider>
       </ThemeProvider>
     </HelmetProvider>

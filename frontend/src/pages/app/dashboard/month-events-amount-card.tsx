@@ -1,5 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { api } from "@/lib/api";
+import { api } from "@/services/api";
 import { useQuery } from "@tanstack/react-query";
 import { CalendarCheck } from "lucide-react";
 
@@ -18,6 +18,9 @@ export function MonthEventsAmountCard() {
             const response = await api.get('/evento/recent-count');
             return response.data;
         },
+        refetchInterval: 1000 * 60 * 5,
+        staleTime: 0,  // Dados são sempre considerados obsoletos
+        refetchOnWindowFocus: true,
         placeholderData: { count: 0 },
     });
 

@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { AuthContext } from "@/context/AuthContext";
-import { api } from "@/lib/api";
+import { api } from "@/services/api";
 import { useQuery } from "@tanstack/react-query";
 import { useContext, useState } from "react";
 import { CartesianGrid, Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
@@ -56,6 +56,9 @@ export function MovimentacaoCargaHorariaGrafico() {
             const response = await api.get(`/certificado/usuario/${usuarioId}/carga-horaria-mensal`);
             return response.data;
         },
+        refetchInterval: 1000 * 60 * 5,
+        staleTime: 0,  // Dados são sempre considerados obsoletos
+        refetchOnWindowFocus: true,
         placeholderData: { usuarioId, cargaHorariaMensal: [] },
     })
 

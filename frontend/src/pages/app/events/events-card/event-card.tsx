@@ -1,5 +1,5 @@
 import { Card } from "@/components/ui/card";
-import { api } from "@/lib/api";
+import { api } from "@/services/api";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { EventList } from "./event-list";
 

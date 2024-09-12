@@ -4,7 +4,6 @@ import { Certificates } from "@/pages/app/certificates/certificates";
 import { CreateFormEvents } from "@/pages/app/events/create-events";
 import { Events } from "@/pages/app/events/events";
 import { Inscricoes } from "@/pages/app/inscricoes/inscricao";
-import { Participations } from "@/pages/app/participations/participations";
 import { createBrowserRouter, Outlet } from "react-router-dom";
 
 import { AppLayout } from "@/pages/app/_layouts/app";
@@ -17,6 +16,7 @@ import { Orders } from "../pages/app/orders/orders";
 import { SignIn } from "../pages/auth/sing-in";
 import { SignUp } from "../pages/auth/sing-up";
 import { ProtectedRoute } from "./ProtectedRoute";
+import { AccountsRole } from "@/pages/app/account/accounts-role";
 
 const AuthProviderWrapper = () => (
   <AuthProvider>
@@ -42,13 +42,18 @@ export const router = createBrowserRouter([
                 element: <ProtectedRoute allowedRoles={['ADMIN']} />,
                 children: [
                   { path: "/categories", element: <Categoria /> },
+                  { path: "/roles", element: <AccountsRole /> },
                   { path: "/events-create", element: <CreateFormEvents /> },
                   { path: "/validate-presence", element: <ValidatePresence /> },
                 ]
               },
-              { path: "/participations", element: <Participations /> },
+              {
+                element: <ProtectedRoute allowedRoles={['USER']} />,
+                children: [
+                  { path: "/certificates", element: <Certificates /> },
+                ]
+              },
               { path: "/inscricoes", element: <Inscricoes /> },
-              { path: "/certificates", element: <Certificates /> },
               { path: "/minha-conta", element: <UserProfile /> },
             ],
           },

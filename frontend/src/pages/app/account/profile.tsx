@@ -13,7 +13,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useNavigate } from "react-router-dom";
-import { api } from "@/lib/api";
+import { api } from "@/services/api";
 
 const formSchema = z.object({
     nome: z.string().min(1, "Nome é obrigatório"),

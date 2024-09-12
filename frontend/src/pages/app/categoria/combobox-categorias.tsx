@@ -14,7 +14,7 @@ import {
     PopoverContent,
     PopoverTrigger,
 } from "@/components/ui/popover";
-import { api } from "@/lib/api";
+import { api } from "@/services/api";
 import { cn } from "@/lib/utils";
 import { useQuery } from "@tanstack/react-query";
 import { Check, ChevronsUpDown } from "lucide-react";

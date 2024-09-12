@@ -4,7 +4,7 @@ import {
     SheetTrigger,
 } from "@/components/ui/sheet";
 import { AuthContext } from "@/context/AuthContext";
-import { Calendar, GraduationCap, Home, Menu, QrCode, Tags } from "lucide-react";
+import { Calendar, GraduationCap, Home, Menu, QrCode, Tags, Users2 } from "lucide-react";
 import { useContext } from "react";
 import { NavLink } from "./nav-link";
 import { Button } from "./ui/button";
@@ -27,15 +27,24 @@ export function SheetMobile() {
                     <NavLink to="/events">
                         <Calendar className="h-4 w-4 mr-2" /> Eventos
                     </NavLink>
-                    <NavLink to="/inscricoes">
-                        <QrCode className="h-4 w-4 mr-2" /> Inscrições
-                    </NavLink>
-                    <NavLink to="/certificates">
-                        <GraduationCap className="h-4 w-4 mr-2" /> Certificado
-                    </NavLink>
+                    {user && user.perfil === 'USER' && (
+                        <NavLink to="/inscricoes">
+                            <QrCode className="h-4 w-4 mr-2" /> Inscrições
+                        </NavLink>
+                    )}
+                    {user && user.perfil === 'USER' && (
+                        <NavLink to="/certificates">
+                            <GraduationCap className="h-4 w-4 mr-2" /> Certificado
+                        </NavLink>
+                    )}
                     {user && user.perfil === 'ADMIN' && (
                         <NavLink to="/categories">
                             <Tags className="h-4 w-4" /> Categoria
+                        </NavLink>
+                    )}
+                    {user && user.perfil === 'ADMIN' && (
+                        <NavLink to="/roles">
+                            <Users2 className="h-4 w-4" /> Perfil de Usuário
                         </NavLink>
                     )}
                 </nav>

@@ -5,7 +5,7 @@ import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMe
 import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { AuthContext } from "@/context/AuthContext";
-import { api } from "@/lib/api";
+import { api } from "@/services/api";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { ListFilter, Search } from "lucide-react";
 import { FormEvent, useContext, useEffect, useState } from "react";
@@ -13,6 +13,7 @@ import { Helmet } from "react-helmet-async";
 import { Link, useSearchParams } from "react-router-dom";
 import { EventTableRow } from "./event-table-row";
 import { EventoResponse } from "./interface/events-response";
+import { SearchFilter } from "@/components/search-filters";
 
 export function Events() {
     const [open, setOpen] = useState(false);
@@ -28,7 +29,7 @@ export function Events() {
         dataFim: true,
         cargaHoraria: true,
         local: true,
-        status: true,
+        // status: true,
     });
 
     const currentPage = searchParams.get('page') ? Number(searchParams.get('page')) : 1;
@@ -103,15 +104,8 @@ export function Events() {
             <div className="flex flex-col gap-4">
                 <div className="space-y-2.5">
                     <form onSubmit={handleFilter} className="flex items-center gap-2">
-                        <div className="relative w-1/6">
-                            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-                            <Input
-                                type="text"
-                                value={filter}
-                                onChange={handleInputChange}
-                                placeholder="Pesquisar..."
-                                className="rounded-md border border-gray-300 px-8 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 pr-7"
-                            />
+                    <div className="relative">
+                            <SearchFilter filter={filter} handleInputChange={handleInputChange} />
                         </div>
                         <div className="ml-auto flex items-center gap-2">
                             <DropdownMenu>
@@ -182,14 +176,14 @@ export function Events() {
                                     >
                                         Local
                                     </DropdownMenuCheckboxItem>
-                                    <DropdownMenuCheckboxItem
+                                    {/* <DropdownMenuCheckboxItem
                                         checked={columnVisibility.status}
                                         onCheckedChange={(checked) =>
                                             setColumnVisibility((prev) => ({ ...prev, status: checked }))
                                         }
                                     >
                                         Status
-                                    </DropdownMenuCheckboxItem>
+                                    </DropdownMenuCheckboxItem> */}
 
                                 </DropdownMenuContent>
                             </DropdownMenu>
@@ -224,7 +218,7 @@ export function Events() {
                                                 {columnVisibility.dataFim && <TableHead className="hidden lg:table-cell">Data de Fim</TableHead>}
                                                 {columnVisibility.cargaHoraria && <TableHead className="hidden lg:table-cell">Carga Horária</TableHead>}
                                                 {columnVisibility.local && <TableHead className="hidden md:table-cell"> Local</TableHead>}
-                                                {columnVisibility.status && <TableHead>Status</TableHead>}
+                                                 <TableHead>Status</TableHead>
                                             </TableRow>
                                         </TableHeader>
                                         <TableBody>

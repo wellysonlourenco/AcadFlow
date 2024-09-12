@@ -1,5 +1,5 @@
 import { AuthContext } from "@/context/AuthContext";
-import { api } from "@/lib/api";
+import { api } from "@/services/api";
 import { keepPreviousData, useQuery, useQueryClient } from "@tanstack/react-query";
 import { ChevronDown, LogOut, Ticket, User } from "lucide-react";
 import { useContext } from "react";

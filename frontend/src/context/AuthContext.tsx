@@ -1,4 +1,5 @@
-import { api } from "@/lib/api";
+import { api } from "@/services/api";
+import { useMutation } from "@tanstack/react-query";
 import { jwtDecode } from "jwt-decode";
 import { createContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -18,6 +19,7 @@ type UserRole = 'ADMIN' | 'USER';
 interface AuthContextData {
   user: IUser | null;
   signIn: ({ email, senha }: { email: string; senha: string }) => Promise<void>;
+  signUp: ({ nome, email, senha }: { nome: string; email: string; senha: string, perfil: string }) => Promise<void>;
   signOut: () => void;
   isAuth: boolean;
   isAdmin: boolean;
@@ -112,6 +114,27 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }
   };
 
+
+  const signUpMutation = useMutation({
+    mutationFn: async ({ nome, email, senha, perfil }: { nome: string; email: string; senha: string, perfil: string }) => {
+      const response = await api.post("/auth/create", { nome, email, senha, perfil });
+      return response.data;
+    },
+    onSuccess: () => {
+      toast.success("Usuário cadastrado com sucesso!");
+      navigate('/sign-in');
+    },
+    onError: (error) => {
+      console.error("Erro ao cadastrar usuário:", error);
+      toast.error("Erro ao cadastrar usuário. Por favor, tente novamente.");
+    },
+  });
+
+  const signUp = async ({ nome, email, senha, perfil }: { nome: string; email: string; senha: string, perfil: string }) => {
+    perfil = 'USER';
+    await signUpMutation.mutateAsync({ nome, email, senha, perfil });
+  };
+
   const signOut = () => {
     localStorage.clear();
     setUser(null);
@@ -127,6 +150,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       value={{
         user,
         signIn,
+        signUp,
         signOut,
         isAuth,
         isAdmin,

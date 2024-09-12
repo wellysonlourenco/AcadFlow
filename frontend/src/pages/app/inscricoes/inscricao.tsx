@@ -3,7 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { AuthContext } from "@/context/AuthContext";
-import { api } from "@/lib/api";
+import { api } from "@/services/api";
 import { keepPreviousData, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Search } from "lucide-react";
 import { FormEvent, useContext, useEffect, useState } from "react";
@@ -11,6 +11,7 @@ import { Helmet } from "react-helmet-async";
 import { useSearchParams } from "react-router-dom";
 import { InscricaoTableRow } from "./inscricao-table-row";
 import { InscricaoResponse } from "./interface/inscricao";
+import { SearchFilter } from "@/components/search-filters";
 
 export function Inscricoes() {
     const [open, setOpen] = useState(false);
@@ -92,15 +93,8 @@ export function Inscricoes() {
             <div className="flex flex-col gap-4">
                 <div className="space-y-2.5">
                     <form onSubmit={handleFilter} className="flex items-center gap-2">
-                        <div className="relative w-1/6">
-                            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" /> 
-                            <Input
-                                type="text"
-                                value={filter}
-                                onChange={handleInputChange}
-                                placeholder="Pesquisar..."
-                                className="rounded-md border border-gray-300 px-8 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 pr-7"
-                            />
+                    <div className="relative">
+                            <SearchFilter filter={filter} handleInputChange={handleInputChange} />
                         </div>
                         {/* <div className="ml-auto flex items-center gap-2">
                             <Button variant="outline" asChild>

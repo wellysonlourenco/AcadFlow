@@ -1,5 +1,5 @@
 import { AuthContext } from "@/context/AuthContext";
-import { Calendar, CircleCheck, FileText, GraduationCap, Home, QrCode, Tags } from "lucide-react";
+import { Calendar, CircleCheck, FileText, GraduationCap, Home, QrCode, Tags, Users2 } from "lucide-react";
 import { useContext } from "react";
 import { AccountMenu } from "./account-menu";
 import { NavLink } from "./nav-link";
@@ -29,12 +29,16 @@ export function Header() {
                             <Tags className="h-4 w-4" /> Categoria
                         </NavLink>
                     )}
-                    <NavLink to="/inscricoes">
-                        <QrCode className="h-4 w-4" /> Inscrições
-                    </NavLink>
-                    <NavLink to="/certificates">
-                        <GraduationCap className="h-4 w-4" /> Certificado
-                    </NavLink>
+                    {user && user.perfil === 'USER' && (
+                        <NavLink to="/inscricoes">
+                            <QrCode className="h-4 w-4" /> Inscrições
+                        </NavLink>
+                    )}
+                    {user && user.perfil === 'USER' && (
+                        <NavLink to="/certificates">
+                            <GraduationCap className="h-4 w-4" /> Certificado
+                        </NavLink>
+                    )}
                     {user && user.perfil === 'ADMIN' && (
                         <NavLink to="/validate-presence">
                             <CircleCheck className="h-4 w-4" /> Validar Presença
@@ -43,6 +47,11 @@ export function Header() {
                     {user && user.perfil === 'ADMIN' && (
                         <NavLink to="/validate-presence">
                             <FileText className="h-4 w-4" /> Relatórios
+                        </NavLink>
+                    )}
+                    {user && user.perfil === 'ADMIN' && (
+                        <NavLink to="/roles">
+                            <Users2 className="h-4 w-4" /> Perfil de Usuário
                         </NavLink>
                     )}
                 </nav>

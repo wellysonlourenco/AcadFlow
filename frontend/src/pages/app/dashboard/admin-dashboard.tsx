@@ -4,7 +4,8 @@ import { CategoriaEventosPizzaChart } from "./categories-events-pizza-chart";
 import { TotalEventosAbertoCard } from "./events-ativos-amount-card";
 import { MonthEventsAmountCard } from "./month-events-amount-card";
 import { MonthRevenueCard } from "./month-revenue-card";
-import { MovimentacaoCargaHorariaGrafico, } from "./movimentacao_carga_horaria_grafico";
+import { EventsInscriptionsChart } from "./movimentacao_inscricao_eventos_grafico";
+import { TotalUsuariosCard } from "./total_usuarios_card";
 
 export function AdminDashboard() {
     return (
@@ -18,11 +19,11 @@ export function AdminDashboard() {
                     <MonthEventsAmountCard />
                     <TotalEventosAbertoCard />
                     <MonthRevenueCard />
-                    <CargaHorariaTotalCard />
+                    <TotalUsuariosCard />
                 </div>
 
                 <div className="grid grid-cols-9 gap-4">
-                    <MovimentacaoCargaHorariaGrafico />
+                    <EventsInscriptionsChart />
                     <CategoriaEventosPizzaChart />
                 </div>
             </div>

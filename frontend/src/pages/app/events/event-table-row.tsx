@@ -2,12 +2,13 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { TableCell, TableRow } from "@/components/ui/table";
 import { AuthContext } from "@/context/AuthContext";
-import { api } from "@/lib/api";
+import { api } from "@/services/api";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { ArrowRight, Check, Navigation, X } from "lucide-react";
+import { ArrowRight, Check, Navigation, Printer, X } from "lucide-react";
 import { useContext, useState } from "react";
 import { toast } from "sonner";
 import { Categoria } from "./interface/events-response";
+import { motion } from 'framer-motion';
 
 interface EventTableRowProps {
     eventos: {
@@ -33,7 +34,7 @@ interface EventTableRowProps {
         dataFim: boolean;
         cargaHoraria: boolean;
         local: boolean;
-        status: boolean;
+        // status: boolean;
     }
 }
 
@@ -41,8 +42,13 @@ export function EventTableRow({ eventos, columnVisibility }: EventTableRowProps)
     const [open, setOpen] = useState(false);
     const { user } = useContext(AuthContext);
     const queryClient = useQueryClient();
+    const [downloading, setDownloading] = useState(false);
+    const relatorio = eventos.id;
+
 
     const isEventoAtivo = eventos.status === "ATIVO";
+
+
 
     //verifica se o usuário está inscrito no evento
     const { data: isInscrito, refetch: refetchInscricaoStatus } = useQuery({
@@ -54,6 +60,30 @@ export function EventTableRow({ eventos, columnVisibility }: EventTableRowProps)
         },
         enabled: !!user?.id && isEventoAtivo,
     });
+
+
+    const handleGenerateRelatorio = async () => {
+        try {
+            setDownloading(true);
+            const response = await api.get(`/inscricao/evento/${eventos.id}/pdf`, {
+                responseType: 'blob',
+            });
+            const url = window.URL.createObjectURL(new Blob([response.data]));
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', `${eventos.id}.pdf`);
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+            window.URL.revokeObjectURL(url);
+        } catch (error) {
+            toast.error("Erro ao gerar o relatório!");
+            //console.error("Erro ao gerar o comprovante:", error);
+        } finally {
+            toast.success("Relatório gerado com sucesso!");
+            setDownloading(false);
+        }
+    };
 
 
 
@@ -115,63 +145,85 @@ export function EventTableRow({ eventos, columnVisibility }: EventTableRowProps)
                     </div>
                 </TableCell>
             )}
-            {columnVisibility.status && (
+
+
+            <TableCell>
+                {eventos.status === "ATIVO" ? (
+                    <div className="flex items-center gap-2">
+                        <span className="h-2 w-2 rounded-full bg-green-400" />
+                        Inscrições abertas
+                    </div>
+                ) : (
+                    <div className="flex items-center gap-2">
+                        <span className="h-2 w-2 rounded-full bg-red-400" />
+                        inscrições encerradas
+                    </div>
+                )}
+            </TableCell>
+
+            {user && user.perfil === 'USER' && (
                 <TableCell>
-                    {eventos.status === "ATIVO" ? (
-                        <div className="flex items-center gap-2">
-                            <span className="h-2 w-2 rounded-full bg-green-400" />
-                            Inscrições abertas
-                        </div>
+
+                    {isEventoAtivo ? (
+                        isInscrito ? (
+                            <Button variant="ghost" size="sm" disabled>
+                                <Check className="mr-2 h-4 w-4" />
+                                <span className="hidden sm:inline">Inscrição realizada</span>
+                                <span className="sm:hidden">Inscrito</span>
+                            </Button>
+                        ) : (
+                            <Dialog open={open} onOpenChange={setOpen}>
+                                <DialogTrigger asChild>
+                                    <Button variant="ghost" size="sm">
+                                        <ArrowRight className="mr-2 h-4 w-4" />
+                                        <span className="hidden sm:inline">Fazer Inscrição</span>
+                                        <span className="sm:hidden">Inscrever</span>
+                                    </Button>
+                                </DialogTrigger>
+                                <DialogContent>
+                                    <DialogHeader>
+                                        <DialogTitle>Confirmar Inscrição</DialogTitle>
+                                        <DialogDescription>
+                                            Você está prestes a se inscrever no evento "{eventos.nome}". Deseja continuar?
+                                        </DialogDescription>
+                                    </DialogHeader>
+                                    <DialogFooter>
+                                        <Button variant="outline" onClick={() => setOpen(false)}>Cancelar</Button>
+                                        <Button onClick={handleInscricao} disabled={inscricaoMutation.isPending}>
+                                            {inscricaoMutation.isPending ? 'Inscrevendo...' : 'Confirmar Inscrição'}
+                                        </Button>
+                                    </DialogFooter>
+                                </DialogContent>
+                            </Dialog>
+                        )
                     ) : (
-                        <div className="flex items-center gap-2">
-                            <span className="h-2 w-2 rounded-full bg-red-400" />
-                                inscrições encerradas
-                        </div>
+                        <Button variant="ghost" size="sm" disabled>
+                            <X className=" mr-2 h-4 w-4 text-red-500" />
+                            <span className="hidden sm:inline">
+                                Inscrições encerradas</span>
+                            <span className="sm:hidden">Encerrado</span>
+                        </Button>
                     )}
                 </TableCell>
             )}
-            <TableCell>
-                {isEventoAtivo ? (
-                    isInscrito ? (
-                        <Button variant="ghost" size="sm" disabled>
-                            <Check className="mr-2 h-4 w-4" />
-                            <span className="hidden sm:inline">Inscrição realizada</span>
-                            <span className="sm:hidden">Inscrito</span>
-                        </Button>
-                    ) : (
-                        <Dialog open={open} onOpenChange={setOpen}>
-                            <DialogTrigger asChild>
-                                <Button variant="ghost" size="sm">
-                                    <ArrowRight className="mr-2 h-4 w-4" />
-                                    <span className="hidden sm:inline">Fazer Inscrição</span>
-                                    <span className="sm:hidden">Inscrever</span>
-                                </Button>
-                            </DialogTrigger>
-                            <DialogContent>
-                                <DialogHeader>
-                                    <DialogTitle>Confirmar Inscrição</DialogTitle>
-                                    <DialogDescription>
-                                        Você está prestes a se inscrever no evento "{eventos.nome}". Deseja continuar?
-                                    </DialogDescription>
-                                </DialogHeader>
-                                <DialogFooter>
-                                    <Button variant="outline" onClick={() => setOpen(false)}>Cancelar</Button>
-                                    <Button onClick={handleInscricao} disabled={inscricaoMutation.isPending}>
-                                        {inscricaoMutation.isPending ? 'Inscrevendo...' : 'Confirmar Inscrição'}
-                                    </Button>
-                                </DialogFooter>
-                            </DialogContent>
-                        </Dialog>
-                    )
-                ) : (
-                    <Button variant="ghost" size="sm" disabled>
-                         <X className=" mr-2 h-4 w-4 text-red-500" />
-                        <span className="hidden sm:inline">
-                            Inscrições encerradas</span>
-                        <span className="sm:hidden">Encerrado</span>
+
+            {user && user.perfil === 'ADMIN' && (
+                <TableCell>
+                    <Button variant="ghost" size="sm">
+                        Editar
                     </Button>
-                )}
-            </TableCell>
+                    <motion.div whileTap={{ scale: 0.9 }}>
+                    <Button
+                        variant="ghost"
+                        className="text-foreground hover:underline"
+                        onClick={handleGenerateRelatorio}
+                        disabled={downloading }
+                    >
+                        <Printer size={19} className="h-3 w-3 mr-2" /> Imprimir
+                    </Button>
+                </motion.div>
+                </TableCell>
+            )}
         </TableRow>
     )
 }

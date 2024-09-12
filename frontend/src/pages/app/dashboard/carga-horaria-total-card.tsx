@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { AuthContext } from "@/context/AuthContext";
-import { api } from "@/lib/api";
+import { api } from "@/services/api";
 import { useQuery } from "@tanstack/react-query";
 import { CalendarX } from "lucide-react";
 import { useContext } from "react";
@@ -26,6 +26,9 @@ export function CargaHorariaTotalCard() {
             const response = await api.get(`/certificado/usuario/${usuarioId}/carga-horaria`);
             return response.data;
         },
+        refetchInterval: 1000 * 60 * 5,
+        staleTime: 0,  // Dados são sempre considerados obsoletos
+        refetchOnWindowFocus: true,
         placeholderData: { usuarioId, totalHoras: 0 },
     })
 

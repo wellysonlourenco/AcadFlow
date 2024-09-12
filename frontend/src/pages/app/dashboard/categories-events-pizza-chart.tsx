@@ -1,5 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { API_URL } from "@/lib/api";
+import { API_URL } from "@/services/api";
 import { PieChart } from "lucide-react";
 import { useEffect, useState } from 'react';
 import { Cell, Pie, PieChart as RechartsPieChart, ResponsiveContainer } from 'recharts';
