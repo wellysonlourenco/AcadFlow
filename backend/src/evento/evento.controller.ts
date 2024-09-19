@@ -2,12 +2,14 @@ import { multerConfig } from '@/middleware/DiskStorage';
 import { FileSizeValidationPipe } from '@/pipe/uploaded-file';
 import { EventoValidationPipe } from '@/schema/evento';
 import { OrderParamSchema, orderValidationPipe, PageParamSchema, pageValidatioPipe, PerPageParamSchema, perPageValidationPipe, SearchParamSchema, searchValidationPipe } from '@/schema/page-param';
-import { Body, Controller, Delete, FileTypeValidator, Get, HttpCode, HttpException, HttpStatus, MaxFileSizeValidator, Param, ParseFilePipe, ParseIntPipe, Patch, Post, Query, UploadedFile, UseInterceptors, UsePipes } from '@nestjs/common';
+import { Body, Controller, Delete, FileTypeValidator, Get, HttpCode, HttpException, HttpStatus, MaxFileSizeValidator, Param, ParseFilePipe, ParseIntPipe, Patch, Post, Query, Res, UploadedFile, UseInterceptors, UsePipes } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Status } from '@prisma/client';
+import { Response } from 'express';
 import * as fs from 'fs/promises';
 import { EventoDto } from './dto/evento.dto';
 import { EventoService } from './evento.service';
+
 
 @Controller('evento')
 export class EventoController {
@@ -17,7 +19,7 @@ export class EventoController {
   @Post()
   @HttpCode(201)
   @UseInterceptors(FileInterceptor('imagem', multerConfig))
-    //@UsePipes(EventoValidationPipe)
+  //@UsePipes(EventoValidationPipe)
   async create(
     @Body('nome') nome: string,
     @Body('descricao') descricao: string,
@@ -67,6 +69,12 @@ export class EventoController {
   @Get('events-report')
   async getUserEventsReport(): Promise<any> {
     return this.eventoService.getEventsReport();
+  }
+
+  // Rota para gerar e baixar o PDF da lista de eventos com a quantidade de inscrições
+  @Get('download-pdf')
+  async downloadEventPdf(@Res() res: Response) {
+    return this.eventoService.generateEventPdf(res);
   }
 
   @Get('count-ativo')

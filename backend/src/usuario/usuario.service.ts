@@ -1,7 +1,9 @@
 import { PrismaService } from '@/prisma/prisma.service';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { Perfil } from '@prisma/client';
+import { Response } from 'express';
 import * as fs from 'fs/promises';
+import { PDFDocument, rgb } from 'pdf-lib';
 
 @Injectable()
 export class UsuarioService {
@@ -66,10 +68,94 @@ export class UsuarioService {
 
     }
 
+    async getUserStatistics() {
+        const totalUsers = await this.prisma.usuario.count();
+        const adminCount = await this.prisma.usuario.count({
+          where: { perfil: 'ADMIN' },
+        });
+        const userCount = await this.prisma.usuario.count({
+          where: { perfil: 'USER' },
+        });
+    
+        return {
+          totalUsers,
+          adminCount,
+          userCount,
+        };
+      }
+
     async userCount() {
         const count = await this.prisma.usuario.count({});
         return count;
     }
+
+    async findAllUsers() {
+        return this.prisma.usuario.findMany({
+            select: {
+                nome: true,
+                email: true,
+                perfil: true,  // ADMIN ou USER
+            },
+            orderBy: [
+                { perfil: 'asc' },  // Coloca "ADMIN" no topo, pois "desc" trata "ADMIN" antes de "USER"
+                { nome: 'asc' },     // Ordena os nomes em ordem alfabética
+            ],
+        });
+    }
+
+    // Método para gerar PDF com a lista de usuários
+    async generateUserPdf(res: Response) {
+        const users = await this.findAllUsers();
+
+        const pdfDoc = await PDFDocument.create();
+        let page = pdfDoc.addPage([595, 842]);  // Dimensões de A4 no modo retrato
+        const { height } = page.getSize();
+
+        const fontSize = 12;
+        let yPosition = height - fontSize * 2;
+
+        // Título
+        page.drawText('Lista de Usuários', { x: 50, y: yPosition, size: fontSize + 4 });
+        yPosition -= fontSize * 2;
+
+        // Cabeçalhos da Tabela
+        const col1X = 50;
+        const col2X = 200;
+        const col3X = 400;
+
+        page.drawText('Nome', { x: col1X, y: yPosition, size: fontSize, color: rgb(0, 0, 0) });
+        page.drawText('Email', { x: col2X, y: yPosition, size: fontSize, color: rgb(0, 0, 0) });
+        page.drawText('Perfil', { x: col3X, y: yPosition, size: fontSize, color: rgb(0, 0, 0) });
+
+        yPosition -= fontSize * 1.5;
+
+        // Iterando sobre os usuários e adicionando à tabela
+        users.forEach((user) => {
+            page.drawText(user.nome, { x: col1X, y: yPosition, size: fontSize, color: rgb(0, 0, 0) });
+            page.drawText(user.email, { x: col2X, y: yPosition, size: fontSize, color: rgb(0, 0, 0) });
+            page.drawText(user.perfil, { x: col3X, y: yPosition, size: fontSize, color: rgb(0, 0, 0) });
+
+            yPosition -= fontSize * 1.5;
+
+            // Adicionar nova página se necessário (se o conteúdo exceder o tamanho da página)
+            if (yPosition <= fontSize * 2) {
+                page = pdfDoc.addPage([595, 842]);  // Nova página no modo retrato
+                yPosition = height - fontSize * 2;  // Reiniciar a posição y
+            }
+        });
+
+
+        const pdfBytes = await pdfDoc.save();
+
+        res.set({
+            'Content-Type': 'application/pdf',
+            'Content-Disposition': 'attachment; filename="lista_usuarios.pdf"',
+            'Content-Length': pdfBytes.length,
+        });
+
+        res.end(pdfBytes);
+    }
+
 
     async getUsers(take: number, skip: number, searchString: string, orderBy: 'asc' | 'desc') {
 
@@ -94,18 +180,16 @@ export class UsuarioService {
     }
 
 
-    async updateUser(id: number, nome: string, email: string, perfil: Perfil, senha: string) {
+    async updateUser(id: number, nome: string, senha: string) {
         await this.exists(id);
 
-
+        
         return await this.prisma.usuario.update({
             where: {
                 id
             },
             data: {
                 nome,
-                email,
-                perfil : Perfil[perfil],
                 senha,
             }
         })

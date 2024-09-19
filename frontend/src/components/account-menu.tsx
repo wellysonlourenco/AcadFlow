@@ -72,12 +72,12 @@ export function AccountMenu() {
                         <span>Minha Conta</span>
                     </Link>
                 </DropdownMenuItem>
-                <DropdownMenuItem>
+                {/* <DropdownMenuItem>
                     <Link to="/inscricoes" className="flex items-center gap-2">
                         <Ticket className="w-4 h-4 mr-2" />
                         <span>Inscrições</span>
                     </Link>
-                </DropdownMenuItem>
+                </DropdownMenuItem> */}
                 <DropdownMenuItem className="text-rose-500 dark:text-rose-400" onClick={handleSignOut}>
                     <LogOut className="w-4 h-4 mr-2" />
                     <span>Sair</span>

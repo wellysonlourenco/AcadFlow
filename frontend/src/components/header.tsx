@@ -6,6 +6,7 @@ import { NavLink } from "./nav-link";
 import { SheetMobile } from "./sheet-mobile";
 import { ThemeToggle } from "./theme/theme-toggle";
 import { Separator } from "./ui/separator";
+import { DropdownMenuRelatorio } from "./dropdownMenu";
 
 export function Header() {
     const { user } = useContext(AuthContext);
@@ -45,9 +46,7 @@ export function Header() {
                         </NavLink>
                     )}
                     {user && user.perfil === 'ADMIN' && (
-                        <NavLink to="/validate-presence">
-                            <FileText className="h-4 w-4" /> Relatórios
-                        </NavLink>
+                        <DropdownMenuRelatorio   />
                     )}
                     {user && user.perfil === 'ADMIN' && (
                         <NavLink to="/roles">

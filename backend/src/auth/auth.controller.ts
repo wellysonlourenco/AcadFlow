@@ -37,7 +37,18 @@ export class AuthController {
     const user = await this.authService.forgotPassword(body);
     return user;
   }
+  
+  
+  // @Patch('update-password')
+  // @HttpCode(200)
+  // async updatePassword(
+  //   @Body('senha', ) senha: string,
+  //   @Body('novaSenha') novaSenha: string,
+  // ) {
 
+  //   const user = await this.authService.updatePassword(senha, novaSenha);
+  //   return user
+  // }
 
   @Patch('reset-password')
   @HttpCode(200)

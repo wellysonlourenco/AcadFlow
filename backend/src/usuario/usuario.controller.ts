@@ -1,11 +1,13 @@
 import { multerConfig } from '@/middleware/DiskStorage';
 import { FileSizeValidationPipe } from '@/pipe/uploaded-file';
 import { OrderParamSchema, orderValidationPipe, PageParamSchema, pageValidatioPipe, PerPageParamSchema, perPageValidationPipe, SearchParamSchema, searchValidationPipe } from '@/schema/page-param';
-import { Body, Controller, Delete, Get, HttpException, HttpStatus, Param, ParseIntPipe, Patch, Put, Query, UploadedFile, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpException, HttpStatus, Param, ParseIntPipe, Patch, Query, Res, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Perfil } from '@prisma/client';
+import { Response } from 'express';
 import * as fs from 'fs/promises';
 import { UsuarioService } from './usuario.service';
+
 
 @Controller('usuario')
 export class UsuarioController {
@@ -13,10 +15,16 @@ export class UsuarioController {
   constructor(private readonly usuarioService: UsuarioService) {}
   
     @Get('count')
-    async countUsers() {
-        const total =  await this.usuarioService.userCount();
-        return { total: total}
+    async getUserStatistics() {
+        return  await this.usuarioService.getUserStatistics();
+        
     }
+
+    @Get('download-pdf')
+    async downloadUserPdf(@Res() res: Response) {
+      return this.usuarioService.generateUserPdf(res);
+    }
+
   
     @Get('me/:id')
     async getUserById(
@@ -31,6 +39,7 @@ export class UsuarioController {
     ) {
         return await this.usuarioService.findEmails(email);
     }
+
 
 
     @Get()
@@ -99,15 +108,13 @@ export class UsuarioController {
 
 
     
-    @Put(':id')
+    @Patch(':id')
     async updateUser(
         @Param('id', ParseIntPipe) id: number,
         @Body('nome') nome: string,
-        @Body('email') email: string,
-        @Body('perfil') perfil: Perfil,
         @Body('senha') senha: string,
     ) {
-        const user = await this.usuarioService.updateUser(id, nome, email, perfil, senha );
+        const user = await this.usuarioService.updateUser(id, nome, senha );
         return user
     }
 

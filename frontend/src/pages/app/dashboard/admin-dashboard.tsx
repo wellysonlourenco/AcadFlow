@@ -18,7 +18,7 @@ export function AdminDashboard() {
                 <div className="grid grid-cols-4 gap-4">
                     <MonthEventsAmountCard />
                     <TotalEventosAbertoCard />
-                    <MonthRevenueCard />
+                    {/* <MonthRevenueCard /> */}
                     <TotalUsuariosCard />
                 </div>
 

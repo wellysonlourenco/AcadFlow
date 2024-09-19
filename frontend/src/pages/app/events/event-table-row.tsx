@@ -209,9 +209,9 @@ export function EventTableRow({ eventos, columnVisibility }: EventTableRowProps)
 
             {user && user.perfil === 'ADMIN' && (
                 <TableCell>
-                    <Button variant="ghost" size="sm">
+                    {/* <Button variant="ghost" size="sm">
                         Editar
-                    </Button>
+                    </Button> */}
                     <motion.div whileTap={{ scale: 0.9 }}>
                     <Button
                         variant="ghost"

@@ -2,14 +2,16 @@ import { PrismaService } from '@/prisma/prisma.service';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { Status } from '@prisma/client';
 import { endOfMonth, startOfMonth, subDays, subMonths } from 'date-fns';
+import { Response } from 'express';
 import * as fs from 'fs/promises';
+import { PDFDocument, rgb } from 'pdf-lib';
 import { EventoDto } from './dto/evento.dto';
 
 @Injectable()
 export class EventoService {
-    constructor (
+    constructor(
         private readonly prisma: PrismaService,
-    ) {}
+    ) { }
 
 
     async create(
@@ -40,8 +42,8 @@ export class EventoService {
                 descricao,
                 local,
                 status: Status[status],
-                quantidadeHoras, 
-                quantidadeVagas, 
+                quantidadeHoras,
+                quantidadeVagas,
                 categoriaId,
                 dataInicio,
                 dataFim,
@@ -51,32 +53,32 @@ export class EventoService {
     }
 
     // Pesquisa de eventos cadastrados por mês no intervalo de 6 meses
-  async getEventsReport() {
-    const now = new Date();
-    const results = [];
+    async getEventsReport() {
+        const now = new Date();
+        const results = [];
 
-    for (let i = 5; i >= 0; i--) {
-      const startDate = startOfMonth(subMonths(now, i));
-      const endDate = endOfMonth(subMonths(now, i));
+        for (let i = 5; i >= 0; i--) {
+            const startDate = startOfMonth(subMonths(now, i));
+            const endDate = endOfMonth(subMonths(now, i));
 
-      const eventCount = await this.prisma.evento.count({
-        where: {
-          dataCadastro: {
-            gte: startDate,
-            lte: endDate,
-          },
-        },
-      });
+            const eventCount = await this.prisma.evento.count({
+                where: {
+                    dataCadastro: {
+                        gte: startDate,
+                        lte: endDate,
+                    },
+                },
+            });
 
-      results.push({
-        month: startDate.toLocaleString('default', { month: 'long', year: 'numeric' }),
-        eventCount,
-      });
+            results.push({
+                month: startDate.toLocaleString('default', { month: 'long', year: 'numeric' }),
+                eventCount,
+            });
+        }
+
+        const totalEvents = results.reduce((acc, item) => acc + item.eventCount, 0);
+        return { monthlyData: results, totalEvents };
     }
-
-    const totalEvents = results.reduce((acc, item) => acc + item.eventCount, 0);
-    return { monthlyData: results, totalEvents };
-  }
 
 
     //Total de eventos cadastrados nos últimos 30 dias 
@@ -112,7 +114,7 @@ export class EventoService {
             skip,
             where: {
                 nome: { contains: searchString, mode: "insensitive", },
-                
+
             },
             include: {
                 Categoria: true
@@ -146,7 +148,7 @@ export class EventoService {
             }
         })
 
-        if(evento.imagem){
+        if (evento.imagem) {
             evento.imagem = `${process.env.APP_URL}/${evento.imagem}`;
         } else {
             // await this.prisma.evento.update({
@@ -167,7 +169,85 @@ export class EventoService {
     async findAll() {
         return await this.prisma.evento.findMany()
     }
-    
+
+    // Método para buscar todos os eventos com o número de inscrições e ordenar pela data de início
+    async findAllEventsWithRegistrations() {
+        return this.prisma.evento.findMany({
+            include: {
+                _count: {
+                    select: {
+                        Participante: true,  // Contando o número de inscrições por evento
+                    },
+                },
+            },
+            orderBy: {
+                dataInicio: 'asc',  // Ordenando pela data de início em ordem crescente
+            },
+        });
+    }
+
+    // Método para gerar PDF com a lista de eventos e número de inscrições
+    async generateEventPdf(res: Response) {
+        const events = await this.findAllEventsWithRegistrations();
+
+        const pdfDoc = await PDFDocument.create();
+        let page = pdfDoc.addPage([595, 842]);  // Dimensões de A4 no modo retrato
+        const { height } = page.getSize();
+
+        const fontSize = 12;
+        let yPosition = height - fontSize * 2;
+
+        // Título do PDF
+        page.drawText('Lista de Eventos e o total de Inscrições', { x: 50, y: yPosition,   size: fontSize + 4 });
+        yPosition -= fontSize * 2;
+
+        // Cabeçalhos da Tabela
+        const col1X = 50;
+        const col2X = 250;
+        const col3X = 450;
+
+        page.drawText('Nome do Evento', { x: col1X, y: yPosition, size: fontSize, color: rgb(0, 0, 0) });
+        page.drawText('Data (Início - Fim)', { x: col2X, y: yPosition, size: fontSize, color: rgb(0, 0, 0) });
+        page.drawText('Numero de Inscrições', { x: col3X, y: yPosition, size: fontSize, color: rgb(0, 0, 0) });
+
+        yPosition -= fontSize * 1.5;
+
+        // Função auxiliar para truncar nomes de eventos longos
+        const truncate = (str: string, maxLength: number) => {
+            return str.length > maxLength ? str.slice(0, maxLength) + '...' : str;
+        };
+
+        // Iterando sobre os eventos e adicionando à tabela
+        events.forEach((event) => {
+            const truncatedName = truncate(event.nome, 30);  // Limita o nome a 30 caracteres
+            const dateRange = `${new Date(event.dataInicio).toLocaleDateString()} - ${new Date(event.dataFim).toLocaleDateString()}`;
+            const eventInfo = `Inscrições: ${event._count.Participante}`;
+
+            page.drawText(truncatedName, { x: col1X, y: yPosition, size: fontSize, color: rgb(0, 0, 0) });
+            page.drawText(dateRange, { x: col2X, y: yPosition, size: fontSize, color: rgb(0, 0, 0) });
+            page.drawText(eventInfo, { x: col3X, y: yPosition, size: fontSize, color: rgb(0, 0, 0) });
+
+            yPosition -= fontSize * 1.5;
+
+            // Adicionar nova página se necessário (se o conteúdo exceder o tamanho da página)
+            if (yPosition <= fontSize * 2) {
+                page = pdfDoc.addPage([595, 842]);  // Nova página no modo retrato
+                yPosition = height - fontSize * 2;  // Reiniciar a posição y
+            }
+        });
+
+        const pdfBytes = await pdfDoc.save();
+
+        // Configurações de resposta para download do PDF
+        res.set({
+            'Content-Type': 'application/pdf',
+            'Content-Disposition': 'attachment; filename="lista_eventos.pdf"',
+            'Content-Length': pdfBytes.length,
+        });
+
+        res.end(pdfBytes);
+    }
+
 
     async getEventosCount() {
         return await this.prisma.evento.count()
@@ -211,7 +291,7 @@ export class EventoService {
             }
         })
 
-        if(evento.imagem){
+        if (evento.imagem) {
             try {
                 await fs.unlink(`./assets/uploads/${evento.imagem}`)
             } catch (error) {
@@ -237,7 +317,7 @@ export class EventoService {
                         id,
                     },
                 })
-        )
+            )
         ) {
             throw new HttpException(`O evento ${id} não existe.`, HttpStatus.NOT_FOUND);
         }
