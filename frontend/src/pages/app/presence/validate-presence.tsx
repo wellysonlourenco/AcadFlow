@@ -8,6 +8,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import { AnimatePresence, motion } from 'framer-motion';
 import { Loader2 } from 'lucide-react';
+import { Helmet } from "react-helmet-async";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -69,6 +70,9 @@ export function ValidatePresence() {
 
 
     return (
+        <>
+        <Helmet title="Validar Presença" />
+
         <Card className=" mx-auto w-[450px] mt-20 p-6  max-w-sm">
             <CardHeader>
                 <CardTitle className="text-2xl font-bold mb-6">Validar Presença</CardTitle>
@@ -105,5 +109,6 @@ export function ValidatePresence() {
                 </form>
             </CardContent>
         </Card>
+        </>
     );
 }

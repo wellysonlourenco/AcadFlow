@@ -15,7 +15,7 @@ export function AdminDashboard() {
                 <h1 className="text-3xl tracking-tight font-bold">Dashboards</h1>
 
 
-                <div className="grid grid-cols-4 gap-4">
+                <div className="grid grid-cols-3 gap-4">
                     <MonthEventsAmountCard />
                     <TotalEventosAbertoCard />
                     {/* <MonthRevenueCard /> */}

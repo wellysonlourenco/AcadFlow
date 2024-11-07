@@ -94,7 +94,8 @@ export class UsuarioService {
             select: {
                 nome: true,
                 email: true,
-                perfil: true,  // ADMIN ou USER
+                perfil:  true,
+    
             },
             orderBy: [
                 { perfil: 'asc' },  // Coloca "ADMIN" no topo, pois "desc" trata "ADMIN" antes de "USER"
