@@ -17,6 +17,7 @@ export class UsuarioService {
             }
         });
 
+        user.avatar =  user.avatar ? `${process.env.APP_URL}/${user.avatar}` : null;
         return user;
     }
 
@@ -90,7 +91,7 @@ export class UsuarioService {
     }
 
     async findAllUsers() {
-        return this.prisma.usuario.findMany({
+        const users = this.prisma.usuario.findMany({
             select: {
                 nome: true,
                 email: true,
@@ -98,10 +99,14 @@ export class UsuarioService {
     
             },
             orderBy: [
-                { perfil: 'asc' },  // Coloca "ADMIN" no topo, pois "desc" trata "ADMIN" antes de "USER"
-                { nome: 'asc' },     // Ordena os nomes em ordem alfabética
+                { perfil: 'asc' },  
+                { nome: 'asc' },     
             ],
         });
+        return (await users).map(user => ({
+            ...user,
+            perfil: user.perfil === 'ADMIN' ? 'Administrador' : 'Participante'
+        }));
     }
 
     // Método para gerar PDF com a lista de usuários

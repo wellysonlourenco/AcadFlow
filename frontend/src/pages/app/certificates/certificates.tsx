@@ -21,7 +21,7 @@ export function Certificates() {
     const { data: cargaHorariaTotal } = useQuery<CargaHorariaTotalResponse>({
         queryKey: ['carga-horaria-total'],
         queryFn: async () => {
-            const response = await api.get(`/certificado/carga-horaria`);
+            const response = await api.get(`/certificado/usuario/${usuarioId}/carga-horaria`);
             return response.data;
         },
         placeholderData: { totalHoras: 0 },

@@ -156,7 +156,7 @@ export function EventTableRow({ eventos, columnVisibility }: EventTableRowProps)
                 ) : (
                     <div className="flex items-center gap-2">
                         <span className="h-2 w-2 rounded-full bg-red-400" />
-                        inscrições encerradas
+                        Inscrições encerradas
                     </div>
                 )}
             </TableCell>

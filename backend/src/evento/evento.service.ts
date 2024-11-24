@@ -119,9 +119,11 @@ export class EventoService {
             include: {
                 Categoria: true
             },
-            orderBy: {
-                nome: orderBy
-            }
+            orderBy: [
+                { status: orderBy }, // Ordena primeiro pelo status
+                { dataInicio: orderBy }, // Depois pela data de início
+                { nome: orderBy }, // Por último pelo nome
+            ],
         });
 
         return eventos.map(evento => ({

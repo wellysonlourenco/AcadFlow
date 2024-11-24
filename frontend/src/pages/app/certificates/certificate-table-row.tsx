@@ -33,8 +33,6 @@ export function CertificateTableRow({ participacao }: CertificateTableRowProps) 
         }
     };
 
-
-
     const handleGenerateCertificate = async () => {
         try {
             setDownloading(true);
