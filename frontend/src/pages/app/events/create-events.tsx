@@ -17,6 +17,7 @@ import { toast } from "sonner";
 import { z } from "zod";
 import { ComboboxCategorias } from "../categoria/combobox-categorias";
 import { EventCardImagem } from "./event-card-imagem";
+import { AnimatePresence, motion } from 'framer-motion';
 
 const createFormEvent = z.object({
     nome: z.string().min(1, { message: 'Campo Obrigatorio' }),
@@ -74,7 +75,7 @@ export function CreateFormEvents() {
             return response.json();
         },
         onSuccess: () => {
-            
+
             toast.success('Evento criado com sucesso!');
             queryClient.invalidateQueries({ queryKey: ['eventos'] });
             navigate('/events');
@@ -122,6 +123,7 @@ export function CreateFormEvents() {
                     Novo
                 </Badge>
                 <div className="hidden items-center gap-2 md:ml-auto md:flex">
+
                     <Button
                         type="submit"
                         variant="default"
@@ -129,8 +131,28 @@ export function CreateFormEvents() {
                         onClick={handleSubmit(onSubmit)}
                         disabled={isSubmitting}
                     >
-                        Salvar
+                        <AnimatePresence mode="wait" initial={false}>
+                            <motion.span
+                                key={isSubmitting ? 'Salvando' : 'Salvar'}
+                                initial={{ opacity: 0, y: 10 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                exit={{ opacity: 0, y: -10 }}
+                                transition={{ duration: 0.15 }}
+                            >
+                                {isSubmitting ? 'Salvando...' : 'Salvar'}
+                            </motion.span>
+                        </AnimatePresence>
                     </Button>
+
+                    {/* <Button
+                        type="submit"
+                        variant="default"
+                        size="sm"
+                        onClick={handleSubmit(onSubmit)}
+                        disabled={isSubmitting}
+                    >
+                        Salvar
+                    </Button> */}
                 </div>
             </div>
             <div className="grid gap-4 md:grid-cols-[1fr_250px] lg:grid-cols-3 lg:gap-8">

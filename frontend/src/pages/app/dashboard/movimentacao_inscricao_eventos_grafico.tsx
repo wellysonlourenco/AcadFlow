@@ -145,6 +145,7 @@ export function EventsInscriptionsChart() {
                 axisLine={false}
                 tickLine={false}
                 width={80}
+                tick={false}
               />
               <CartesianGrid vertical={false} className="stroke-muted" />
               <Legend onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave} />

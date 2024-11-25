@@ -281,8 +281,8 @@ export default function EditEventsDialog() {
                                             </SelectTrigger>
                                         </FormControl>
                                         <SelectContent>
-                                            <SelectItem value="ATIVO">Ativo</SelectItem>
-                                            <SelectItem value="INATIVO">Inativo</SelectItem>
+                                            <SelectItem value="ATIVO">Inscrição Aberta</SelectItem>
+                                            <SelectItem value="INATIVO">Inscrições encerradas</SelectItem>
                                         </SelectContent>
                                     </Select>
                                     <FormMessage />
