@@ -36,7 +36,7 @@ export class AuthService {
                 nome,
                 email,
                 senha: hashedPassword,
-                perfil,
+                perfil: 'USER' ,
             },
         });
 

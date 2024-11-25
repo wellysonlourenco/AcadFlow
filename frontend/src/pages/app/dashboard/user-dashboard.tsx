@@ -17,7 +17,7 @@ export function UserDashboard() {
                 <div className="grid grid-cols-4 gap-4">
                     <MonthEventsAmountCard />
                     <TotalEventosAbertoCard />
-                    <MonthRevenueCard />
+                    {/* <MonthRevenueCard /> */}
                     <CargaHorariaTotalCard />
                 </div>
 

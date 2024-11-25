@@ -127,7 +127,7 @@ export class InscricaoController {
 
     const take = limit || 10;
     const skip = limit * (page - 1);
-    const orderBy = sort;
+    const orderBy = 'desc';
 
 
     const [inscricao, countInscricaoByUser] = await Promise.all([

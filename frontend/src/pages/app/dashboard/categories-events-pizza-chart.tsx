@@ -56,7 +56,7 @@ export function CategoriaEventosPizzaChart() {
         <Card className="col-span-3">
             <CardHeader className="pb-8">
                 <div className="flex items-center justify-between">
-                    <CardTitle className="text-base font-medium">Eventos por Categoria</CardTitle>
+                    <CardTitle className="hidden text-base font-medium">Eventos por Categoria</CardTitle>
                     <PieChart className="h-4 w-4 text-muted-foreground" />
                 </div>
             </CardHeader>

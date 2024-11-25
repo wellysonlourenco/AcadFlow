@@ -63,6 +63,7 @@ export function CreateFormEvents() {
 
     const { mutateAsync } = useMutation({
         mutationFn: async (data: FormData) => {
+            await new Promise(resolve => setTimeout(resolve, 1500));
             const response = await fetch(`${API_URL}/evento`, {
                 method: "POST",
                 body: data
@@ -73,6 +74,7 @@ export function CreateFormEvents() {
             return response.json();
         },
         onSuccess: () => {
+            
             toast.success('Evento criado com sucesso!');
             queryClient.invalidateQueries({ queryKey: ['eventos'] });
             navigate('/events');

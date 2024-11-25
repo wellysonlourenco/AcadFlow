@@ -313,7 +313,7 @@ export class InscricaoService {
                 Evento: true,
             },
             orderBy: {
-                id: orderBy,
+                dataInsc: orderBy,
             }
         });
 
