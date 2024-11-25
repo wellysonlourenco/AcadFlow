@@ -145,6 +145,9 @@ export class EventoService {
                 descricao: true,
                 dataInicio: true,
                 dataFim: true,
+                quantidadeHoras: true,
+                quantidadeVagas: true,
+                status: true,
                 imagem: true,
                 local: true,
             }
@@ -200,7 +203,7 @@ export class EventoService {
         let yPosition = height - fontSize * 2;
 
         // Título do PDF
-        page.drawText('Lista de Eventos e o total de Inscrições', { x: 50, y: yPosition,   size: fontSize + 4 });
+        page.drawText('Lista de Eventos e o total de Inscrições', { x: 50, y: yPosition, size: fontSize + 4 });
         yPosition -= fontSize * 2;
 
         // Cabeçalhos da Tabela
@@ -258,19 +261,41 @@ export class EventoService {
     async updateEvento(id: number, eventoDto: EventoDto) {
         await this.exists(id);
 
-        const dataInicio = new Date(eventoDto.dataInicio)
-        const dataFim = new Date(eventoDto.dataFim)
-
+        // Adicionar tempo às datas (se necessário)
+        const dataInicio = eventoDto.dataInicio
+            ? new Date(eventoDto.dataInicio).toISOString()
+            : undefined;
+    
+        const dataFim = eventoDto.dataFim
+            ? new Date(eventoDto.dataFim).toISOString()
+            : undefined;
+    
+        // Garantir que os valores sejam numéricos ou `undefined`
+        const quantidadeHoras = eventoDto.quantidadeHoras
+            ? parseInt(eventoDto.quantidadeHoras.toString())
+            : undefined;
+    
+        const quantidadeVagas = eventoDto.quantidadeVagas
+            ? parseInt(eventoDto.quantidadeVagas.toString())
+            : undefined;
+    
+        const categoriaId = eventoDto.categoriaId
+            ? parseInt(eventoDto.categoriaId.toString())
+            : undefined;
+    
         return await this.prisma.evento.update({
             where: {
-                id
+                id,
             },
             data: {
+                ...eventoDto,
                 dataInicio,
                 dataFim,
-                ...eventoDto
-            }
-        })
+                quantidadeHoras,
+                quantidadeVagas,
+                categoriaId,
+            },
+        });
     }
 
     async updateImagem(id: number, imagem: string) {

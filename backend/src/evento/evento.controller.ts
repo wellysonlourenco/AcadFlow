@@ -1,8 +1,7 @@
 import { multerConfig } from '@/middleware/DiskStorage';
 import { FileSizeValidationPipe } from '@/pipe/uploaded-file';
-import { EventoValidationPipe } from '@/schema/evento';
 import { OrderParamSchema, orderValidationPipe, PageParamSchema, pageValidatioPipe, PerPageParamSchema, perPageValidationPipe, SearchParamSchema, searchValidationPipe } from '@/schema/page-param';
-import { Body, Controller, Delete, FileTypeValidator, Get, HttpCode, HttpException, HttpStatus, MaxFileSizeValidator, Param, ParseFilePipe, ParseIntPipe, Patch, Post, Query, Res, UploadedFile, UseInterceptors, UsePipes } from '@nestjs/common';
+import { Body, Controller, Delete, FileTypeValidator, Get, HttpCode, HttpException, HttpStatus, MaxFileSizeValidator, Param, ParseFilePipe, ParseIntPipe, Patch, Post, Query, Res, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Status } from '@prisma/client';
 import { Response } from 'express';
@@ -125,7 +124,7 @@ export class EventoController {
 
   @Patch(':id')
   @HttpCode(200)
-  @UsePipes(EventoValidationPipe)
+  //@UsePipes(EventoValidationPipe)
   async updateEvento(
     @Param('id', ParseIntPipe) id: number,
     @Body() eventoDto: EventoDto
