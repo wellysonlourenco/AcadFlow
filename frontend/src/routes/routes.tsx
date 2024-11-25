@@ -19,6 +19,7 @@ import { ProtectedRoute } from "./ProtectedRoute";
 import { AccountsRole } from "@/pages/app/account/accounts-role";
 import { Account } from "@/pages/app/account/my-count";
 import { UserProfileUser } from "@/pages/app/account/profileuser";
+import EditEventsDialog from "@/pages/app/events/edit-events-dialog";
 
 const AuthProviderWrapper = () => (
   <AuthProvider>
@@ -46,6 +47,7 @@ export const router = createBrowserRouter([
                   { path: "/categories", element: <Categoria /> },
                   { path: "/roles", element: <AccountsRole /> },
                   { path: "/events-create", element: <CreateFormEvents /> },
+                  { path: "/events/edit/:id" , element: <EditEventsDialog />},
                   { path: "/validate-presence", element: <ValidatePresence /> },
                 ]
               },

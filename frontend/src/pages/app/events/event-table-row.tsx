@@ -4,11 +4,12 @@ import { TableCell, TableRow } from "@/components/ui/table";
 import { AuthContext } from "@/context/AuthContext";
 import { api } from "@/services/api";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { ArrowRight, Check, Navigation, Printer, X } from "lucide-react";
+import { ArrowRight, Check, Navigation, Pencil, Printer, X } from "lucide-react";
 import { useContext, useState } from "react";
 import { toast } from "sonner";
 import { Categoria } from "./interface/events-response";
 import { motion } from 'framer-motion';
+import { useNavigate } from "react-router-dom";
 
 interface EventTableRowProps {
     eventos: {
@@ -44,6 +45,7 @@ export function EventTableRow({ eventos, columnVisibility }: EventTableRowProps)
     const queryClient = useQueryClient();
     const [downloading, setDownloading] = useState(false);
     const relatorio = eventos.id;
+    const navigate = useNavigate();
 
 
     const isEventoAtivo = eventos.status === "ATIVO";
@@ -113,7 +115,9 @@ export function EventTableRow({ eventos, columnVisibility }: EventTableRowProps)
         inscricaoMutation.mutate({ usuarioId: user.id, eventoId: eventos.id });
     };
 
-
+    const handleEdit = () => {
+        navigate(`/events/edit/${eventos.id}`);
+    };
 
     return (
         <TableRow>
@@ -213,6 +217,16 @@ export function EventTableRow({ eventos, columnVisibility }: EventTableRowProps)
                         Editar
                     </Button> */}
                     <motion.div whileTap={{ scale: 0.9 }}>
+                    <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={handleEdit}
+                            className="mr-2"
+                        >
+                            <Pencil size={16} className="mr-2" />
+                            Editar
+                        </Button>
+
                     <Button
                         variant="ghost"
                         className="text-foreground hover:underline"

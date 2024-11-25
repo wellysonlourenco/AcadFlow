@@ -16,4 +16,5 @@ export const eventoSchema = z.object ({
 })
 
 export type EventoBodySchema = z.infer<typeof eventoSchema>
+export type EventoUpdateDto = Partial<z.infer<typeof eventoSchema>>;
 export const EventoValidationPipe = new ZodValidationPipe(eventoSchema)

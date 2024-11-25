@@ -148,6 +148,7 @@ export class EventoService {
                 quantidadeHoras: true,
                 quantidadeVagas: true,
                 status: true,
+                categoriaId: true,
                 imagem: true,
                 local: true,
             }
